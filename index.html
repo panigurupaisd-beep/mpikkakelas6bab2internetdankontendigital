@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Petualangan Kurir Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E3F1FF;--paper:#FFFFFF;--ink:#1B2160;--soft:#4B5390;--line:#BFD3F0;--edge:#1B2160;
+  --sun:#FFC22E;--on-sun:#1B2160;--coral:#FF5E7A;--coral-bg:#FFE1E7;--mint:#0FA67A;--mint-bg:#D6F6EA;
+  --violet:#6C4CFF;--violet-bg:#E8E3FF;--focus:#6C4CFF;
+  --a:#1E8FFF;--a-bg:#DCEEFF;--b:#6C4CFF;--b-bg:#E8E3FF;--c:#FFC22E;--c-bg:#FFF0C2;--d:#FF5E7A;--d-bg:#FFE1E7;--e:#12B886;--e-bg:#D6F6EA;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1340;--paper:#192060;--ink:#EDF0FF;--soft:#B5BEF0;--line:#2F3A8C;--edge:#7F8DF0;
+    --coral-bg:#4D1F31;--mint:#2FD6A3;--mint-bg:#0F4B3C;--violet-bg:#2B2670;--focus:#FFD84D;
+    --a-bg:#16306B;--b-bg:#2B2670;--c-bg:#4A3B10;--d-bg:#4D1F31;--e-bg:#0F4B3C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1340;--paper:#192060;--ink:#EDF0FF;--soft:#B5BEF0;--line:#2F3A8C;--edge:#7F8DF0;
+  --coral-bg:#4D1F31;--mint:#2FD6A3;--mint-bg:#0F4B3C;--violet-bg:#2B2670;--focus:#FFD84D;
+  --a-bg:#16306B;--b-bg:#2B2670;--c-bg:#4A3B10;--d-bg:#4D1F31;--e-bg:#0F4B3C;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:100%}
+html.big{font-size:118%}
+body{margin:0;background-color:var(--bg);background-image:radial-gradient(var(--line) 1.4px,transparent 1.4px);background-size:28px 28px;color:var(--ink);font:400 1.0625rem/1.55 Nunito,"Trebuchet MS",system-ui,sans-serif;min-height:100%}
+h1,h2,h3,h4{font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif;font-weight:800;line-height:1.12;margin:0 0 .4em;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,6.5vw,3.6rem)}h2{font-size:clamp(1.5rem,4vw,2.1rem)}h3{font-size:1.25rem}
+p{margin:0 0 .8em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.muted{color:var(--soft)}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px 70px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 14px;background:var(--paper);border-bottom:3px solid var(--edge)}
+.brand{display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.15rem}
+.piko{width:38px;height:38px;flex:none}
+.stats{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:2.5px solid var(--edge);border-radius:99px;background:var(--bg);font-weight:800;font-size:.95rem;white-space:nowrap}
+.pill.xp{background:var(--sun);color:var(--on-sun)}
+.tools{display:flex;gap:6px}
+.ib{min-width:44px;min-height:44px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);font-weight:800;padding:0 10px}
+.ib:hover{background:var(--bg)}
+@media(max-width:620px){.brand span{display:none}.stats{margin-left:0}.pill{font-size:.85rem;padding:3px 9px}}
+
+/* primitives */
+.card{background:var(--paper);border:2.5px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);padding:20px}
+.card.flat{box-shadow:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:8px 22px;border:2.5px solid var(--edge);border-radius:99px;background:var(--sun);color:var(--on-sun);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.1rem;box-shadow:0 4px 0 var(--edge);transition:transform .08s,box-shadow .08s}
+.btn:hover{filter:brightness(1.04)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:var(--paper);color:var(--ink)}
+.btn.mint{background:var(--mint);color:#fff}
+.btn.sm{min-height:40px;padding:4px 16px;font-size:.98rem}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-block;padding:2px 11px;border:2px solid var(--edge);border-radius:99px;font-size:.84rem;font-weight:800;background:var(--paper)}
+.fb{min-height:1.5em;margin:10px 0 0;padding:0;font-weight:600}
+.fb.good{color:var(--mint)}.fb.bad{color:var(--coral)}
+.fb.good,.fb.bad{padding:10px 14px;border-radius:14px;border:2px solid currentColor;background:var(--paper)}
+.shake{animation:shake .38s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* welcome */
+.hero{display:grid;gap:22px;align-items:center}
+@media(min-width:860px){.hero{grid-template-columns:1.1fr .9fr}}
+.hero h1 span{display:block}
+.kicker{display:inline-block;margin-bottom:10px}
+.track{position:relative;height:150px;border:2.5px solid var(--edge);border-radius:18px;background:var(--a-bg);overflow:hidden;margin-bottom:12px}
+.track .end{position:absolute;top:50%;transform:translateY(-50%);font-size:2.6rem}
+.track .l{left:14px}.track .r{right:14px}
+.track .cable{position:absolute;left:62px;right:62px;top:50%;border-top:4px dashed var(--edge)}
+.track .runner{position:absolute;top:50%;margin-top:-30px;left:76px;width:60px;height:60px;transition:left 1.5s ease-in-out}
+.track .runner .piko{width:60px;height:60px}
+.track .runner.back .piko{transform:scaleX(-1)}
+.cap{min-height:3em;font-weight:700}
+.jalur{display:grid;gap:10px;margin:14px 0}
+@media(min-width:600px){.jalur{grid-template-columns:repeat(3,1fr)}}
+.jb{text-align:left;padding:12px 14px;border:2.5px solid var(--edge);border-radius:18px;background:var(--paper)}
+.jb b{display:block;font-family:"Baloo 2",sans-serif;font-size:1.1rem}
+.jb small{color:var(--soft);font-size:.88rem;line-height:1.3;display:block}
+.jb[aria-pressed="true"]{background:var(--sun);color:var(--on-sun);box-shadow:0 4px 0 var(--edge)}
+.jb[aria-pressed="true"] small{color:var(--on-sun)}
+input[type=text],textarea{width:100%;padding:10px 14px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);color:var(--ink);font:inherit}
+label.lb{display:block;font-weight:800;margin:10px 0 4px}
+
+/* guide */
+.tp-grid{display:grid;gap:12px;margin:16px 0}
+@media(min-width:640px){.tp-grid{grid-template-columns:1fr 1fr}}
+.tp{display:flex;gap:12px;padding:12px 14px;border:2.5px solid var(--edge);border-radius:18px;background:var(--paper)}
+.tp .ic{font-size:1.9rem;flex:none}
+.tp.ok{background:var(--mint-bg)}
+.drill{display:grid;gap:12px;margin:14px 0}
+@media(min-width:760px){.drill{grid-template-columns:repeat(3,1fr)}}
+.drill .card{padding:14px}
+.basket{margin-top:8px;min-height:64px;border:3px dashed var(--edge);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:var(--bg);width:100%}
+.basket.over{background:var(--sun)}
+
+/* map */
+.mapgrid{display:grid;gap:16px}
+@media(min-width:900px){.mapgrid{grid-template-columns:1.5fr 1fr;align-items:start}}
+.lvlbar{height:18px;border:2.5px solid var(--edge);border-radius:99px;background:var(--bg);overflow:hidden}
+.lvlbar i{display:block;height:100%;background:var(--sun);transition:width .6s}
+.cable-list{position:relative;list-style:none;margin:0;padding:0 0 0 38px}
+.cable-list::before{content:"";position:absolute;left:15px;top:20px;bottom:20px;border-left:5px dotted var(--edge)}
+.stn{position:relative;margin-bottom:16px}
+.stn .node{position:absolute;left:-38px;top:18px;width:32px;height:32px;border-radius:50%;border:3px solid var(--edge);background:var(--paper);display:grid;place-items:center;font-weight:800;font-size:.9rem;z-index:1}
+.stn.done .node{background:var(--mint);color:#fff}
+.stn .piko-here{position:absolute;left:-52px;top:-14px;width:46px;height:46px;z-index:2;animation:hop 1.2s ease-in-out infinite}
+@keyframes hop{50%{transform:translateY(-6px)}}
+.stbtn{width:100%;text-align:left;border:2.5px solid var(--edge);border-radius:20px;padding:14px 16px;background:var(--st-bg);box-shadow:0 5px 0 var(--edge);display:flex;gap:14px;align-items:center}
+.stbtn:hover{filter:brightness(1.03)}
+.stbtn .big{font-size:2.2rem;flex:none}
+.stbtn h3{margin:0}
+.stbtn small{display:block;color:var(--soft);font-weight:600}
+.dots{display:flex;gap:5px;margin-top:6px}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--edge);background:var(--paper)}
+.dots i.on{background:var(--mint)}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bdg{text-align:center;font-size:.72rem;font-weight:800;line-height:1.15}
+.bdg .bi{display:grid;place-items:center;width:100%;aspect-ratio:1;font-size:1.7rem;border:2.5px solid var(--edge);border-radius:50%;background:var(--sun);margin-bottom:4px}
+.bdg.lock .bi{background:var(--bg);filter:grayscale(1);opacity:.5}
+.tp-list{list-style:none;margin:0;padding:0}
+.tp-list li{display:flex;gap:8px;padding:4px 0;font-size:.95rem}
+.tp-list li b{flex:none}
+
+/* station */
+.sthead{background:var(--st-bg);border:2.5px solid var(--edge);border-radius:22px;padding:14px 18px;display:flex;gap:14px;align-items:center;margin-bottom:14px;box-shadow:0 5px 0 var(--edge)}
+.sthead .big{font-size:2.6rem}
+.sthead h2{margin:0}
+.dpl{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.stp{padding:5px 12px;border:2.5px solid var(--edge);border-radius:99px;background:var(--paper);font-weight:800;font-size:.86rem}
+.stp.done{background:var(--mint-bg)}
+.stp.cur{background:var(--st);color:#fff;color:var(--on-st,#fff)}
+.stp[disabled]{opacity:.45;cursor:not-allowed}
+.bubble{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.bubble .piko{width:54px;height:54px}
+.bubble .say{position:relative;flex:1;padding:10px 14px;border:2.5px solid var(--edge);border-radius:18px;background:var(--bg);font-weight:700}
+.bubble .say::before{content:"";position:absolute;left:-10px;top:18px;width:16px;height:16px;background:var(--bg);border-left:2.5px solid var(--edge);border-bottom:2.5px solid var(--edge);transform:rotate(45deg)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.scene{font-size:3rem;text-align:center;padding:10px;border-radius:18px;background:var(--st-bg);border:2.5px solid var(--edge);margin-bottom:12px}
+.hintbox{margin-top:12px;padding:10px 14px;border:2.5px dashed var(--edge);border-radius:14px;background:var(--c-bg)}
+
+/* options */
+.qblock{margin:0 0 20px}
+.qblock>.qt{font-weight:800;margin-bottom:8px}
+.ctx{padding:12px 14px;border:2.5px solid var(--edge);border-radius:16px;background:var(--bg);margin-bottom:10px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px 14px;border:2.5px solid var(--edge);border-radius:16px;background:var(--paper);min-height:48px}
+.opt:hover:not([disabled]){background:var(--c-bg)}
+.opt .ol{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:2.5px solid var(--edge);font-weight:800;font-size:.85rem;background:var(--bg)}
+.opt.right{background:var(--mint-bg);border-color:var(--mint)}
+.opt.wrong{background:var(--coral-bg);border-color:var(--coral)}
+.opt[disabled]{cursor:default}
+.opts.two{grid-template-columns:1fr 1fr}
+
+/* hotspots */
+.hs{display:grid;gap:10px;margin:12px 0}
+.hs.grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.hs.row{grid-template-columns:1fr;align-items:center}
+@media(min-width:760px){.hs.row{grid-template-columns:repeat(5,1fr)}.hs.row .arrow{display:none}}
+.hs-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 8px;border:2.5px solid var(--edge);border-radius:18px;background:var(--paper);font-weight:800;position:relative}
+.hs-btn .hs-ic{font-size:2.1rem}
+.hs-btn.seen::after{content:"✓";position:absolute;top:6px;right:8px;color:var(--mint);font-weight:800}
+.hs-btn[aria-pressed="true"]{background:var(--st-bg);box-shadow:0 4px 0 var(--edge)}
+.arrow{display:none}
+.prog{font-weight:800;color:var(--soft);margin:4px 0}
+.detail{padding:14px 16px;border:2.5px solid var(--edge);border-radius:18px;background:var(--bg);min-height:120px}
+.analogy{padding:8px 12px;border-radius:12px;background:var(--c-bg)}
+.fmt{display:inline-block;margin-right:4px}
+
+/* order / match / sort */
+.slots{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px}
+.slot{display:flex;gap:10px;align-items:center;min-height:48px;padding:6px 12px;border:2.5px dashed var(--edge);border-radius:14px;color:var(--soft)}
+.slot .sn{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--st);color:var(--on-st,#fff);font-weight:800}
+.slot.filled{border-style:solid;background:var(--mint-bg);color:var(--ink);font-weight:700}
+.pool{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cs{padding:9px 14px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);box-shadow:0 3px 0 var(--edge);text-align:left;font-weight:700;cursor:grab}
+.cs.sel{background:var(--sun);color:var(--on-sun);transform:translateY(-3px)}
+.cs[disabled]{box-shadow:none;cursor:default;opacity:.9}
+.mcols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcols>div{display:grid;gap:8px;align-content:start}
+.mt{padding:10px 12px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);text-align:left;font-weight:700;font-size:.95rem}
+.mt.sel{background:var(--sun);color:var(--on-sun)}
+.mt.ok{background:var(--mint-bg);border-color:var(--mint)}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.bucket{min-height:130px;padding:8px;border:3px dashed var(--edge);border-radius:18px;background:var(--bg)}
+.bucket.over{background:var(--sun)}
+.bk-h{font-family:"Baloo 2",sans-serif;font-weight:800;margin-bottom:6px}
+.bk-list{display:grid;gap:6px}
+.bk-list .cs{font-size:.88rem;padding:5px 9px;box-shadow:none;background:var(--mint-bg)}
+
+/* poster */
+.maker{display:grid;gap:18px}
+@media(min-width:800px){.maker{grid-template-columns:1fr 280px}}
+.poster{aspect-ratio:4/5;border:3px solid var(--edge);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;overflow:hidden;box-shadow:0 5px 0 var(--edge);max-width:320px;width:100%;margin:0 auto}
+.poster .em{font-size:4.4rem;line-height:1}
+.poster .pt{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.6rem;line-height:1.1;overflow-wrap:anywhere}
+.poster .pm{font-weight:700;font-size:1rem;overflow-wrap:anywhere}
+.poster .by{margin-top:auto;font-size:.8rem;font-weight:800;opacity:.9}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:46px;height:46px;border-radius:50%;border:3px solid var(--edge)}
+.sw button[aria-pressed="true"]{outline:4px solid var(--focus);outline-offset:2px}
+.stk button{font-size:1.6rem;min-width:50px;min-height:50px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper)}
+.stk button[aria-pressed="true"]{background:var(--sun)}
+.chk{list-style:none;margin:8px 0;padding:0}
+.chk li{padding:3px 0;font-weight:700}
+.chk li.ok{color:var(--mint)}
+.chk li.no{color:var(--soft)}
+.chk li.warn{color:var(--coral)}
+
+/* detective */
+.msg{border:2.5px solid var(--edge);border-radius:18px;background:var(--paper);padding:14px}
+.msg .meta{font-size:.9rem;margin-bottom:8px}
+.seg{border:0;background:none;padding:2px 1px;border-radius:6px;font:inherit;text-align:left;border-bottom:3px dotted var(--soft)}
+.seg:hover{background:var(--c-bg)}
+.seg.found{background:var(--coral-bg);border-bottom:3px solid var(--coral)}
+.found-list{display:grid;gap:8px;margin-top:12px}
+.flag{padding:8px 12px;border-radius:12px;background:var(--coral-bg);border:2px solid var(--coral)}
+
+/* summary */
+.mm{display:grid;gap:10px;margin:10px 0}
+.mm-c{justify-self:center;padding:10px 22px;border:3px solid var(--edge);border-radius:99px;background:var(--st);color:var(--on-st,#fff);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.2rem}
+.mm-b{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding-top:12px;border-top:4px dotted var(--edge)}
+.mm-b div{padding:8px 12px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);font-size:.95rem}
+.kw{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.myth{width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:2.5px dashed var(--edge);border-radius:14px;background:var(--paper)}
+.myth.open{border-style:solid;background:var(--mint-bg)}
+
+/* result */
+.ring{--p:0;width:170px;height:170px;border-radius:50%;background:conic-gradient(var(--mint) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin:0 auto}
+.ring div{width:132px;height:132px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:2.8rem;border:2.5px solid var(--edge)}
+.bar{height:16px;border:2.5px solid var(--edge);border-radius:99px;background:var(--paper);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--violet)}
+.board{width:100%;border-collapse:collapse}
+.board td,.board th{padding:6px 8px;border-bottom:2px solid var(--line);text-align:left}
+.cert{border:4px double var(--edge);border-radius:22px;padding:24px;text-align:center;background:var(--paper)}
+.scale{display:flex;gap:6px;flex-wrap:wrap}
+.scale button{min-width:52px;min-height:48px;border:2.5px solid var(--edge);border-radius:14px;background:var(--paper);font-size:1.5rem}
+.scale button[aria-pressed="true"]{background:var(--sun);box-shadow:0 3px 0 var(--edge)}
+
+/* toast / confetti / dialogs */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:80;display:grid;gap:8px;justify-items:center;pointer-events:none}
+.toast{padding:8px 18px;border:2.5px solid var(--edge);border-radius:99px;background:var(--sun);color:var(--on-sun);font-weight:800;box-shadow:0 4px 0 var(--edge);animation:pop .3s}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+.conf{position:fixed;top:-30px;z-index:90;font-size:1.6rem;pointer-events:none;animation:fall 2.2s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.2}}
+dialog{border:3px solid var(--edge);border-radius:24px;background:var(--paper);color:var(--ink);padding:0;width:min(940px,94vw);max-height:90vh}
+dialog::backdrop{background:rgba(14,19,64,.6)}
+.dh{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;background:var(--paper);border-bottom:3px solid var(--edge);z-index:2}
+.dh h2{margin:0}
+.db{padding:16px 18px 24px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:6px 14px;border:2.5px solid var(--edge);border-radius:99px;background:var(--paper);font-weight:800;font-size:.9rem}
+.tab[aria-selected="true"]{background:var(--sun);color:var(--on-sun)}
+.tw{overflow-x:auto;margin:8px 0 16px}
+table.t{border-collapse:collapse;min-width:560px;width:100%;font-size:.93rem}
+table.t th,table.t td{border:2px solid var(--line);padding:6px 9px;vertical-align:top;text-align:left}
+table.t th{background:var(--bg)}
+.db h3{margin-top:16px}
+.db ul,.db ol{padding-left:1.2em;margin:.3em 0 .8em}
+.gl{display:grid;gap:8px}
+.gl div{padding:8px 12px;border:2px solid var(--line);border-radius:12px}
+.badge-pop{text-align:center;padding:26px 22px}
+.badge-pop .bi{font-size:5rem}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{.topbar,.nav,.noprint,#toasts{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="piko" viewBox="0 0 80 80">
+    <line x1="40" y1="16" x2="40" y2="8" stroke="#1B2160" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="40" cy="6" r="4.5" fill="#FF5E7A" stroke="#1B2160" stroke-width="3"/>
+    <rect x="22" y="66" width="12" height="9" rx="4" fill="#1B2160"/><rect x="46" y="66" width="12" height="9" rx="4" fill="#1B2160"/>
+    <rect x="9" y="16" width="62" height="52" rx="18" fill="#FFC22E" stroke="#1B2160" stroke-width="4"/>
+    <circle cx="29" cy="39" r="5.5" fill="#1B2160"/><circle cx="51" cy="39" r="5.5" fill="#1B2160"/>
+    <circle cx="31" cy="37" r="1.8" fill="#fff"/><circle cx="53" cy="37" r="1.8" fill="#fff"/>
+    <circle cx="20" cy="50" r="4" fill="#FF5E7A" opacity=".65"/><circle cx="60" cy="50" r="4" fill="#FF5E7A" opacity=".65"/>
+    <path d="M32 51 Q40 59 48 51" fill="none" stroke="#1B2160" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<header class="topbar" id="topbar">
+  <button class="brand" id="homeBtn" type="button" aria-label="Ke beranda"><svg class="piko" aria-hidden="true"><use href="#piko"/></svg><span>Kurir Data</span></button>
+  <div class="stats" aria-live="polite">
+    <span class="pill xp">⭐ <span id="xpVal">0</span> XP</span>
+    <span class="pill">🚀 Level <span id="lvlNum">1</span>: <span id="lvlName">Paket Mungil</span></span>
+    <span class="pill">🏅 <span id="bdgCount">0</span>/8</span>
+  </div>
+  <div class="tools">
+    <button class="ib" id="btnDict" type="button" aria-label="Buka Kamus Piko">📖</button>
+    <button class="ib" id="btnBig" type="button" aria-pressed="false" aria-label="Perbesar huruf">A+</button>
+    <button class="ib" id="btnTeacher" type="button" aria-label="Panel guru">🧑‍🏫</button>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+<div id="toasts"></div>
+
+<dialog id="dlgDict"><div class="dh"><h2>📖 Kamus Piko</h2><button class="ib" type="button" data-close aria-label="Tutup">✕</button></div><div class="db"><label class="lb" for="dictQ">Cari istilah</label><input type="text" id="dictQ" placeholder="Contoh: router"><div class="gl" id="dictList" style="margin-top:12px"></div></div></dialog>
+<dialog id="dlgTeacher"><div class="dh"><h2>🧑‍🏫 Panel Guru</h2><button class="ib" type="button" data-close aria-label="Tutup">✕</button></div><div class="db" id="teacherBody"></div></dialog>
+<dialog id="dlgBadge"><div class="badge-pop" id="badgeBody"></div></dialog>
+
+<script>
+(function(){
+"use strict";
+
+/* ============ helpers ============ */
+const $ = (s,r)=> (r||document).querySelector(s);
+function h(tag,props,...kids){
+  const el=document.createElement(tag);
+  if(props) for(const k in props){
+    const v=props[k]; if(v==null||v===false) continue;
+    if(k==="class") el.className=v;
+    else if(k.slice(0,2)==="on") el.addEventListener(k.slice(2),v);
+    else el.setAttribute(k, v===true?"":v);
+  }
+  kids.flat(Infinity).forEach(c=>{ if(c==null||c===false) return; el.append(c.nodeType?c:document.createTextNode(c)); });
+  return el;
+}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const piko=(cls)=>{const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("class","piko "+(cls||""));s.setAttribute("aria-hidden","true");s.innerHTML='<use href="#piko"/>';return s;};
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+const reduce=()=>window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function speak(t){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="id-ID";u.rate=.92;speechSynthesis.speak(u);}catch(e){}}
+
+/* ============ state ============ */
+const KEY="pkd-v1", BOARD="pkd-board";
+const S=Object.assign({name:"",jalur:"petualang",xp:0,aw:{},sd:{},done:{},badges:[],quiz:null,refl:null,unlock:false},LS.get(KEY)||{});
+const save=()=>LS.set(KEY,S);
+let CUR={view:"welcome"};
+
+const LEVELS=[{n:1,name:"Paket Mungil",xp:0},{n:2,name:"Penjelajah Web",xp:60},{n:3,name:"Kreator Konten",xp:130},{n:4,name:"Detektif Data",xp:210},{n:5,name:"Warga Digital Bijak",xp:290}];
+const lvlOf=x=>LEVELS.reduce((a,l)=>x>=l.xp?l:a,LEVELS[0]);
+const BADGES={A:{i:"🌐",n:"Penjelajah Internet"},B:{i:"🖼️",n:"Ahli Konten Digital"},C:{i:"🎨",n:"Kreator Muda"},D:{i:"🕵️",n:"Detektif Phishing"},E:{i:"🤝",n:"Warga Digital Bijak"},P:{i:"📣",n:"Penjaga Janji"},Q:{i:"🏆",n:"Juara Misi Akhir"},R:{i:"🌟",n:"Pemikir Reflektif"}};
+
+function toast(m){const t=h("div",{class:"toast"},m);$("#toasts").append(t);setTimeout(()=>t.remove(),2400);}
+function confetti(){ if(reduce())return; const E=["🎉","⭐","✨","💙","🟡","🎈"]; for(let i=0;i<26;i++){const c=h("span",{class:"conf","aria-hidden":"true"},E[i%E.length]);c.style.left=Math.random()*100+"vw";c.style.animationDelay=(Math.random()*.6)+"s";document.body.append(c);setTimeout(()=>c.remove(),3000);} }
+function refreshBar(){const l=lvlOf(S.xp);$("#xpVal").textContent=S.xp;$("#lvlNum").textContent=l.n;$("#lvlName").textContent=l.name;$("#bdgCount").textContent=S.badges.length;}
+function award(n,key){ if(!n||S.aw[key])return; S.aw[key]=1; const before=lvlOf(S.xp).n; S.xp+=n; toast("+"+n+" XP ⭐"); const after=lvlOf(S.xp); if(after.n>before){setTimeout(()=>{toast("🚀 Naik level: "+after.name+"!");confetti();},700);} save(); refreshBar(); }
+function gainBadge(k,showDialog){ if(S.badges.includes(k))return false; S.badges.push(k); save(); refreshBar(); if(showDialog){const b=BADGES[k];$("#badgeBody").replaceChildren(h("div",{class:"bi","aria-hidden":"true"},b.i),h("h2",null,"Lencana baru!"),h("p",null,"Kamu mendapat lencana “"+b.n+"”. Hebat, "+firstName()+"!"),h("button",{class:"btn",type:"button",onclick:()=>$("#dlgBadge").close()},"Lanjut"));$("#dlgBadge").showModal();confetti();} return true; }
+const firstName=()=> (S.name||"Teman Piko").split(/\s+/)[0];
+const markStep=id=>{S.sd[id]=1;save();};
+
+/* ============ data: glossary ============ */
+const GLOS=[
+["Internet","Jaringan raksasa yang menghubungkan jutaan komputer dan perangkat di seluruh dunia."],
+["Jaringan","Beberapa perangkat yang saling terhubung untuk bertukar data."],
+["Router","Alat yang mengatur lalu lintas data dan menyambungkan jaringan di rumah atau sekolah ke internet."],
+["Wi-Fi","Cara perangkat tersambung ke router tanpa kabel."],
+["ISP","Penyedia layanan internet: perusahaan yang menyediakan sambungan internet."],
+["Server","Komputer besar yang menyimpan dan mengirim data, seperti halaman web, gambar, dan video."],
+["Website","Kumpulan halaman web yang tersimpan di server dan dibuka lewat browser."],
+["Browser","Aplikasi untuk membuka website, misalnya Chrome, Firefox, Edge, dan Safari."],
+["URL","Alamat lengkap sebuah halaman web, misalnya https://www.contoh.id."],
+["Unduh","Mengambil data dari internet ke perangkatmu."],
+["Unggah","Mengirim data dari perangkatmu ke internet."],
+["Konten digital","Informasi berbentuk data digital (teks, gambar, audio, video, animasi) yang dapat dibuat, disimpan, dan dibagikan lewat perangkat digital."],
+["Phishing","Penipuan online yang “memancing” kita agar memberikan data pribadi lewat pesan, tautan, atau situs palsu."],
+["Data pribadi","Informasi tentang dirimu, seperti kata sandi, alamat rumah, dan nomor HP."],
+["Kata sandi","Kode rahasia untuk masuk ke akun. Jangan diberikan kepada siapa pun."],
+["OTP","Kode sekali pakai untuk membuktikan bahwa itu benar kamu. Jangan diberikan kepada siapa pun."],
+["Hoaks","Kabar bohong yang dibuat seolah-olah benar."],
+["Jejak digital","Semua yang pernah kamu unggah atau lakukan di internet. Bisa tersimpan lama."],
+["Perundungan siber","Menyakiti atau mempermalukan orang lain lewat internet."],
+["Sumber","Pembuat atau asal sebuah karya atau informasi. Karya orang lain harus disebutkan sumbernya."]];
+
+/* ============ question helper ============ */
+const Q=(q,opts,ctx)=>({q,ctx,opts:opts.map(o=>({t:o[0],ok:!!o[1],fb:o[2]}))});
+
+/* ============ data: stations ============ */
+const STATIONS=[
+{id:"A",col:"a",icon:"🌐",title:"Mengenal Internet",sub:"Ikuti perjalanan satu paket data",tp:"TP 1",dpl:["Penalaran Kritis","Kemandirian"],
+ steps:[
+ {id:"A.story",name:"Cerita",type:"story",say:"Halo! Aku Piko, paket data kecil. Baca ceritanya, lalu tebak jawabannya, ya!",
+  pic:"📱➡️🌍",text:"Pagi ini Raka ingin menonton video cara membuat kincir angin di tablet. Ia mengetik alamat videonya, dan dalam beberapa detik videonya muncul! Padahal video itu tersimpan di tempat yang sangat jauh.",
+  q:Q("Menurutmu, bagaimana video itu bisa sampai ke tablet Raka?",[
+   ["Video itu sudah ada di dalam tablet sejak awal",0,"Hmm, video baru ini tidak ada di dalam tablet Raka. Coba tebak lagi!"],
+   ["Ada jalur yang menghubungkan tablet Raka dengan tempat penyimpanan video",1,"Tepat! Jalur besar itu bernama internet. Yuk, ikuti Piko menyusurinya."],
+   ["Video terbang begitu saja tanpa melewati alat apa pun",0,"Datanya memang bisa lewat sinyal, tetapi tetap melewati alat-alat khusus. Coba tebak lagi!"]]),
+  hint:"Video itu jauh dari tablet Raka. Apa yang menyambungkan dua tempat yang berjauhan?"},
+ {id:"A.explore",name:"Jelajah",type:"hot",say:"Tekan setiap kartu untuk bertemu teman-temanku di sepanjang perjalanan!",
+  intro:"Internet adalah jaringan raksasa yang menghubungkan jutaan komputer di seluruh dunia, seperti jalan raya besar dengan ribuan jalan kecil. Ini lima pemberhentian dalam perjalanan data:",arrows:true,
+  items:[
+  {id:"dev",icon:"📱",name:"Perangkatmu",title:"Perangkat: tempat perjalanan dimulai",body:"Tablet, HP, atau laptop adalah titik awal. Dari sini kamu mengirim permintaan, misalnya “Tolong tampilkan video ini!”. Mengambil data dari internet disebut mengunduh. Mengirim data ke internet disebut mengunggah.",analogy:"Seperti kamu menulis surat permintaan.",example:"Contoh: tablet, HP, laptop, komputer sekolah."},
+  {id:"url",icon:"🔎",name:"Browser dan URL",title:"Browser dan URL",body:"Browser adalah aplikasi untuk membuka website. URL adalah alamat sebuah halaman web. Kalau URL-nya benar, browser tahu ke mana harus pergi.",analogy:"Browser adalah kendaraan, URL adalah alamat tujuannya.",example:"Contoh browser: Chrome, Firefox, Edge. Contoh URL: https://www.contoh.id"},
+  {id:"rtr",icon:"📡",name:"Router dan Wi-Fi",title:"Router: pengatur lalu lintas data",body:"Router mengatur data yang keluar-masuk dan menyambungkan jaringan rumah atau sekolahmu ke internet. Wi-Fi adalah cara perangkat tersambung ke router tanpa kabel.",analogy:"Router seperti petugas pos di gerbang yang mengatur surat masuk dan keluar.",example:"Contoh: router Wi-Fi di sekolahmu."},
+  {id:"isp",icon:"🏢",name:"ISP",title:"ISP: penyedia internet",body:"ISP (Internet Service Provider) adalah perusahaan yang menyediakan sambungan internet. Ia menghubungkan router-mu ke jaringan internet yang jauh lebih besar lewat kabel atau sinyal.",analogy:"Seperti jalan tol yang menghubungkan kotamu dengan kota-kota lain.",example:"Contoh: perusahaan penyedia internet rumah atau paket data HP."},
+  {id:"srv",icon:"🗄️",name:"Server",title:"Server: gudang data",body:"Server adalah komputer besar yang menyimpan dan mengirim data, seperti halaman web, gambar, dan video. Server menyala terus supaya permintaanmu bisa dilayani kapan saja.",analogy:"Seperti perpustakaan raksasa yang melayani peminjaman 24 jam.",example:"Contoh: video, game online, dan website sekolah tersimpan di server."}]},
+ {id:"A.order",name:"Susun",type:"order",say:"Bantu aku! Tekan kartu sesuai urutan perjalanan data dari awal sampai akhir.",
+  hint:"Mulai dari yang kamu lakukan di browser, dan berakhir dengan halaman tampil di layar.",
+  items:[
+  {t:"Raka mengetik alamat video (URL) di browser",cue:"Apa yang kamu lakukan lebih dulu sebelum halaman web muncul?"},
+  {t:"Permintaan keluar dari tablet melalui router (Wi-Fi)",cue:"Data dari tabletmu harus keluar dari rumah lewat alat apa?"},
+  {t:"ISP meneruskan permintaan lewat internet sampai ke server",cue:"Siapa yang menghubungkan jaringan rumahmu ke internet?"},
+  {t:"Server menemukan video dan mengirim datanya kembali",cue:"Di mana video disimpan? Tempat itu harus mengirimkannya balik."},
+  {t:"Browser menerima data dan menampilkan video di layar",cue:"Terakhir, aplikasi apa yang menampilkan hasilnya padamu?"}]},
+ {id:"A.match",name:"Pasangkan",type:"match",say:"Pilih istilah di kiri, lalu pilih artinya di kanan.",
+  hint:"Ingat lagi kartu-kartu di perjalanan tadi. Kalau ragu, buka Kamus Piko (ikon 📖).",
+  pairs:[
+  {l:"Internet",r:"Jaringan raksasa yang menghubungkan banyak komputer di seluruh dunia",clue:"Ingat jalan raya besar dengan ribuan jalan kecil."},
+  {l:"Router",r:"Alat pengatur lalu lintas data yang menyambungkan jaringan ke internet",clue:"Ingat petugas pos di gerbang."},
+  {l:"Server",r:"Komputer besar penyimpan halaman web, gambar, dan video",clue:"Ingat perpustakaan raksasa yang buka 24 jam."},
+  {l:"Browser",r:"Aplikasi untuk membuka website",clue:"Ia seperti kendaraan untuk berkunjung ke website."},
+  {l:"URL",r:"Alamat sebuah halaman web",clue:"Seperti alamat rumah untuk website."},
+  {l:"ISP",r:"Perusahaan penyedia sambungan internet",clue:"Seperti jalan tol penghubung antarkota."}]},
+ {id:"A.quiz",name:"Kuis",type:"quiz",say:"Tiga pertanyaan singkat. Kalau salah, jangan khawatir, kamu boleh mencoba lagi!",xp:5,
+  qs:[
+  Q("Apa yang dimaksud dengan internet?",[
+   ["Sebuah aplikasi di HP",0,"Aplikasi berjalan di perangkat, sedangkan internet adalah jaringan yang menghubungkan banyak perangkat."],
+   ["Jaringan raksasa yang menghubungkan banyak komputer di seluruh dunia",1,"Benar! Internet menghubungkan jutaan komputer dan jaringan di seluruh dunia."],
+   ["Nama lain dari Wi-Fi",0,"Wi-Fi hanya cara tersambung tanpa kabel ke router. Internet jauh lebih luas dari itu."]]),
+  Q("Router di rumah Fitri mati. Fitri tidak bisa membuka video, padahal tabletnya baik-baik saja. Apa yang terjadi?",[
+   ["Permintaan dari tablet tidak bisa keluar rumah karena router tidak bekerja",1,"Tepat! Tanpa router, permintaan dari perangkat tidak bisa diteruskan ke ISP dan internet."],
+   ["Video otomatis terhapus dari server",0,"Server ada di tempat lain dan tidak terpengaruh router di rumah Fitri."],
+   ["Browser berubah menjadi server",0,"Browser dan server punya tugas berbeda. Browser membuka website, server menyimpan datanya."]]),
+  Q("Mana pernyataan yang BENAR?",[
+   ["Mengunggah berarti mengirim file dari perangkatmu ke internet",1,"Benar! Mengunggah = mengirim ke internet. Mengunduh = mengambil dari internet."],
+   ["Mengunduh berarti mengirim file dari perangkatmu ke internet",0,"Itu terbalik. Mengunduh adalah mengambil file dari internet ke perangkatmu."],
+   ["Mengunduh dan mengunggah artinya sama",0,"Keduanya berlawanan arah: unduh = masuk ke perangkatmu, unggah = keluar dari perangkatmu."]])]},
+ {id:"A.sum",name:"Rangkuman",type:"sum",say:"Hebat! Ini peta pikiran perjalanan data. Jangan lupa tiga salah kaprah di bawah!",
+  center:"Perjalanan Data",branches:["📱 Perangkat meminta halaman","📡 Router mengatur data","🏢 ISP menghubungkan ke internet","🗄️ Server menyimpan dan mengirim","🔎 Browser menampilkan hasilnya"],
+  kw:["internet","router","ISP","server","browser","URL","unduh","unggah"],
+  myth:[["Internet itu sama dengan Wi-Fi.","Wi-Fi hanya cara tersambung ke router tanpa kabel. Internet adalah jaringan global yang jauh lebih besar."],["Internet itu sama dengan Google.","Google adalah salah satu layanan (mesin pencari) yang berjalan di atas internet, bukan internet itu sendiri."],["Video di internet tersimpan “di awan” dan tidak ada tempatnya.","Datanya tersimpan di server, yaitu komputer sungguhan di suatu tempat."]],
+  bonus:Q("Misi Bonus: Komputer mengenal alamat berupa angka (alamat IP), sedangkan manusia lebih mudah mengingat nama seperti www.contoh.id. Sistem apa yang menerjemahkan nama website menjadi angka?",[
+   ["DNS, seperti buku telepon internet",1,"Benar! DNS (Domain Name System) menerjemahkan nama website menjadi alamat IP."],
+   ["Router, karena ia membuat Wi-Fi",0,"Router mengatur lalu lintas data. Penerjemah nama ke angka adalah DNS."],
+   ["Browser, karena ia memiliki layar",0,"Browser menampilkan halaman. Penerjemah nama ke angka adalah DNS."]])}
+ ]},
+
+{id:"B",col:"b",icon:"🖼️",title:"Mengenal Konten Digital",sub:"Teks, gambar, audio, dan video",tp:"TP 2",dpl:["Penalaran Kritis","Komunikasi"],
+ steps:[
+ {id:"B.story",name:"Cerita",type:"story",say:"Konten digital ada di sekitar kita. Yuk, tebak apa namanya!",
+  pic:"🖼️🎧🎬",text:"Di grup kelas, Bu Sari membagikan poster hemat air. Dina lalu mendengarkan podcast dongeng dan menonton video pentas seni. Semua itu ia lihat dan dengar di layar tabletnya, tanpa selembar kertas pun.",
+  q:Q("Apa nama yang cocok untuk poster, podcast, dan video yang Dina nikmati di tablet?",[
+   ["Buku cetak",0,"Buku cetak ada di kertas. Yang Dina nikmati berbentuk data di layar. Coba lagi!"],
+   ["Konten digital",1,"Tepat! Konten digital adalah informasi berbentuk data digital yang bisa dibuat, dilihat, dan dibagikan lewat perangkat."],
+   ["Surat kabar",0,"Surat kabar dicetak di kertas. Coba pikirkan sesuatu yang berbentuk data."]]),
+  hint:"Semua itu muncul di layar sebagai data, bukan kertas."},
+ {id:"B.explore",name:"Jelajah",type:"hot",say:"Tekan setiap ikon di layar tablet untuk mengenal jenis-jenis konten digital!",
+  intro:"Konten digital adalah informasi berbentuk data digital yang bisa dibuat, dilihat, disimpan, dan dibagikan lewat HP, tablet, atau komputer.",
+  items:[
+  {id:"txt",icon:"📝",name:"Teks",title:"Teks: tulisan di layar",body:"Teks berisi huruf dan kata, seperti artikel, pesan, dan puisi.",example:"Contoh: pesan dari guru, artikel blog sekolah.",format:["TXT","DOCX","PDF"]},
+  {id:"img",icon:"🖼️",name:"Gambar",title:"Gambar: yang dilihat mata",body:"Gambar bisa berupa foto, ilustrasi, atau poster yang disimpan sebagai file.",example:"Contoh: foto kerja bakti, poster hemat air.",format:["JPG","PNG"]},
+  {id:"aud",icon:"🎧",name:"Audio",title:"Audio: yang didengar telinga",body:"Audio adalah suara yang direkam atau dibuat, seperti musik, podcast, dan rekaman dongeng.",example:"Contoh: rekaman dongeng Si Kancil, podcast sekolah.",format:["MP3","WAV"]},
+  {id:"vid",icon:"🎬",name:"Video",title:"Video: gambar bergerak dan bersuara",body:"Video merekam gambar yang berganti cepat dan sering disertai suara.",example:"Contoh: vlog pentas seni, video tutorial.",format:["MP4"]},
+  {id:"ani",icon:"✨",name:"Animasi",title:"Animasi: gambar yang digerakkan",body:"Animasi dibuat dengan menyusun gambar-gambar sehingga tampak bergerak, bisa juga dibuat dengan koding.",example:"Contoh: kartun pendek, animasi Scratch.",format:["GIF","MP4"]},
+  {id:"int",icon:"🎮",name:"Interaktif",title:"Interaktif: bisa kamu mainkan",body:"Konten interaktif merespons tekananmu, seperti game dan proyek koding.",example:"Contoh: game edukasi, proyek Scratch, media belajar ini!",format:["HTML","SB3"]}]},
+ {id:"B.sort",name:"Kelompokkan",type:"sort",say:"Tekan kartu lalu tekan kotaknya, atau seret kartu ke kotak yang tepat.",
+  hint:"Tanyakan: konten ini dilihat, dibaca, atau didengar?",
+  buckets:[{id:"t",name:"Teks",icon:"📝"},{id:"g",name:"Gambar",icon:"🖼️"},{id:"a",name:"Audio",icon:"🎧"},{id:"v",name:"Video dan animasi",icon:"🎬"}],
+  items:[
+  {t:"Artikel di blog sekolah",b:"t",why:"Artikel tersusun dari tulisan, jadi ini teks."},
+  {t:"Pesan singkat dari guru",b:"t",why:"Pesan singkat berisi tulisan, jadi ini teks."},
+  {t:"Foto kegiatan kerja bakti",b:"g",why:"Foto adalah gambar yang disimpan sebagai file."},
+  {t:"Poster Hemat Air",b:"g",why:"Poster adalah gambar yang berisi desain dan tulisan."},
+  {t:"Rekaman dongeng Si Kancil",b:"a",why:"Rekaman dikenali lewat suara, jadi ini audio."},
+  {t:"Podcast tentang menjaga sungai",b:"a",why:"Podcast adalah siaran suara, jadi ini audio."},
+  {t:"Vlog pentas seni sekolah",b:"v",why:"Vlog memuat gambar bergerak dan suara, jadi ini video."},
+  {t:"Film kartun pendek",b:"v",why:"Kartun adalah animasi: gambar yang digerakkan."}]},
+ {id:"B.quiz",name:"Kuis",type:"quiz",say:"Tiga pertanyaan lagi. Kamu pasti bisa!",xp:5,
+  qs:[
+  Q("Benar atau salah? “Foto yang dicetak di kertas adalah konten digital.”",[
+   ["Benar",0,"Hampir! Foto cetak adalah benda nyata. Konten digital harus berbentuk data."],
+   ["Salah",1,"Tepat! Jika foto itu dipotret HP dan disimpan sebagai file JPG, barulah ia menjadi konten digital."]]),
+  Q("Rina merekam suaranya membaca puisi dan menyimpannya sebagai file MP3. Ini jenis konten digital apa?",[
+   ["Teks",0,"Teks berupa tulisan. Rina merekam suara, bukan menulis."],
+   ["Audio",1,"Benar! Rekaman suara yang disimpan sebagai MP3 adalah audio."],
+   ["Gambar",0,"Gambar dilihat mata. Rekaman suara didengar telinga."]]),
+  Q("Mana pernyataan yang paling tepat tentang konten digital?",[
+   ["Konten digital hanya berupa video",0,"Konten digital punya banyak jenis: teks, gambar, audio, video, animasi, dan lainnya."],
+   ["Konten digital bisa berupa teks, gambar, audio, video, dan animasi",1,"Benar! Semuanya adalah data digital."],
+   ["Semua konten digital pasti benar karena ada di internet",0,"Tidak semua yang ada di internet itu benar. Kita perlu memeriksa sumbernya."]])]},
+ {id:"B.sum",name:"Rangkuman",type:"sum",say:"Inilah ringkasan jenis konten digital. Cek juga salah kaprahnya!",
+  center:"Konten Digital",branches:["📝 Teks: dibaca","🖼️ Gambar: dilihat","🎧 Audio: didengar","🎬 Video dan animasi: ditonton","🎮 Interaktif: dimainkan"],
+  kw:["konten digital","teks","gambar","audio","video","animasi","file"],
+  myth:[["Konten digital hanya video dan gambar.","Teks dan audio juga konten digital, begitu pula animasi dan game."],["Semua yang ada di internet pasti benar.","Siapa pun bisa membuat konten. Periksa sumber sebelum percaya."],["Foto di kertas sama dengan konten digital.","Yang digital adalah filenya, bukan kertas cetaknya."]],
+  bonus:Q("Misi Bonus: Mengapa file video biasanya jauh lebih besar daripada file teks?",[
+   ["Karena video menyimpan banyak gambar yang berganti cepat plus suara, jadi datanya lebih banyak",1,"Benar! Makin banyak informasi yang disimpan, makin besar ukuran filenya."],
+   ["Karena video selalu disimpan di server yang besar",0,"Ukuran file ditentukan oleh banyaknya data di dalamnya, bukan tempat penyimpanannya."],
+   ["Karena video dibuat memakai browser",0,"Browser hanya menampilkan. Ukuran ditentukan oleh jumlah data dalam file."]])}
+ ]},
+
+{id:"C",col:"c",icon:"🎨",title:"Membuat dan Membagikan Konten",sub:"Buat posterku, bagikan dengan aman",tp:"TP 3 dan 4",dpl:["Kreativitas","Komunikasi","Kolaborasi"],
+ steps:[
+ {id:"C.story",name:"Cerita",type:"story",say:"Saatnya jadi kreator! Pikirkan dulu apa yang membuat konten menarik.",
+  pic:"🎨💧",text:"Bu Sari meminta kelas membuat poster “Hemat Air” untuk dibagikan di grup sekolah. Dina bingung: poster seperti apa yang menarik dan bermanfaat?",
+  q:Q("Poster mana yang paling mungkin dibaca dan diingat teman-temanmu?",[
+   ["Penuh tulisan kecil dan warna-warna yang saling bertabrakan",0,"Terlalu ramai membuat mata lelah dan pesan sulit dibaca. Coba lagi!"],
+   ["Judul besar, pesan singkat dan jelas, serta gambar yang sesuai",1,"Tepat! Konten yang menarik jelas, singkat, dan bermanfaat."],
+   ["Gambar bagus tetapi tidak ada pesan apa pun",0,"Gambar bagus menarik perhatian, tetapi tanpa pesan manfaatnya tidak sampai. Coba lagi!"]]),
+  hint:"Konten yang baik itu menarik dan juga berisi pesan yang berguna."},
+ {id:"C.poster",name:"Buat Poster",type:"poster",say:"Rancang posterku sendiri! Daftar periksa akan membantumu menilai hasilnya."},
+ {id:"C.share",name:"Bagikan",type:"quiz",say:"Posterku sudah jadi! Sekarang, bagaimana cara membagikannya dengan aman? Pilih langkah terbaik.",xp:7,
+  qs:[
+  Q("Posterku sudah selesai dan ingin dibagikan. Apa langkah pertama yang paling tepat?",[
+   ["Langsung mengunggah ke semua media sosial",0,"Tunggu dulu! Periksa isinya dan minta pendampingan orang dewasa sebelum membagikan."],
+   ["Memeriksa isi poster, lalu menunjukkannya kepada guru atau orang tua sebelum dibagikan ke tempat yang sesuai, misalnya grup kelas",1,"Tepat! Memeriksa dulu dan didampingi orang dewasa membuat konten lebih aman."],
+   ["Menambahkan nomor HP dan alamat rumah supaya orang bisa menghubungi",0,"Jangan! Data pribadi tidak boleh dicantumkan di konten yang dibagikan."]],
+   "Posterku bertema Hemat Air."),
+  Q("Dina memakai gambar air terjun yang diambil dari internet di posternya. Apa yang sebaiknya Dina lakukan?",[
+   ["Mengatakan bahwa itu gambar buatannya sendiri",0,"Mengaku karya orang lain sebagai milik sendiri itu tidak jujur."],
+   ["Menyebutkan sumber gambar, atau memakai gambar buatan sendiri",1,"Benar! Menyebut sumber adalah cara menghargai pembuat karya."],
+   ["Tidak perlu apa-apa karena semua di internet gratis",0,"Tidak semua gratis. Setiap karya ada pembuatnya yang perlu dihargai."]]),
+  Q("Dina ingin memasukkan foto teman-teman yang sedang kerja bakti ke dalam kontennya. Apa tindakan yang paling bertanggung jawab?",[
+   ["Meminta izin dulu kepada teman-teman yang ada di foto",1,"Tepat! Wajah dan foto seseorang adalah bagian dari datanya, jadi izin itu penting."],
+   ["Langsung dimasukkan, mereka pasti senang",0,"Tidak boleh menebak. Setiap orang berhak memutuskan fotonya dibagikan atau tidak."],
+   ["Memilih foto temannya yang paling lucu agar ramai",0,"Jangan mempermalukan orang lain demi ramai. Pilih konten yang menghargai semua orang."]])]},
+ {id:"C.sum",name:"Rangkuman",type:"sum",say:"Ini lima langkah membuat dan membagikan konten. Kamu sudah melakukannya!",
+  center:"Konten Digital Bermanfaat",branches:["1. Rencanakan: tujuan dan pesan","2. Kumpulkan bahan milik sendiri atau bersumber","3. Buat dengan judul, pesan, dan gambar jelas","4. Periksa: benar, sopan, tanpa data pribadi","5. Bagikan di tempat dan dengan izin yang tepat"],
+  kw:["unggah","sumber","izin","data pribadi","kreatif"],
+  myth:[["Kalau sudah dihapus, konten pasti hilang selamanya.","Konten bisa sudah disimpan atau disalin orang lain. Pikir dulu sebelum mengunggah."],["Gambar di internet boleh dipakai sesuka hati.","Karya orang lain perlu izin atau sumber yang jelas."],["Semakin banyak hiasan, semakin bagus.","Konten yang baik jelas dan mudah dibaca."]],
+  bonus:Q("Misi Bonus: Kamu ingin membuat poster yang bisa dibaca oleh teman yang kesulitan membedakan warna tertentu. Apa yang paling membantu?",[
+   ["Memakai kontras yang jelas antara teks dan latar, dan tidak mengandalkan warna saja",1,"Benar! Kontras yang jelas membantu semua orang membaca, termasuk yang sulit membedakan warna."],
+   ["Memakai warna yang mirip supaya serasi",0,"Warna yang mirip membuat tulisan sulit dibaca."],
+   ["Menulis sekecil mungkin supaya muat",0,"Tulisan kecil justru sulit dibaca."]])}
+ ]},
+
+{id:"D",col:"d",icon:"🕵️",title:"Melindungi Data Pribadi dari Phishing",sub:"Jadi detektif pesan palsu",tp:"TP 5",dpl:["Penalaran Kritis","Kemandirian","Kewargaan"],
+ steps:[
+ {id:"D.story",name:"Cerita",type:"story",say:"Ada pesan masuk ke HP Raka. Bantu Raka memutuskan!",
+  pic:"📩🎣",text:"Sebuah pesan masuk di HP Raka: “SELAMAT! Kamu menang tablet gratis! Klik tautan ini dan kirim kata sandimu sekarang!” Raka sangat senang.",
+  q:Q("Apa yang sebaiknya dilakukan Raka?",[
+   ["Klik tautannya secepat mungkin supaya hadiahnya tidak hangus",0,"Itu yang diinginkan penipu: kamu terburu-buru dan tidak sempat berpikir. Coba lagi!"],
+   ["Berhenti, tidak mengklik, dan menunjukkan pesan itu kepada orang dewasa",1,"Tepat! Berhenti dan bertanya adalah langkah paling aman."],
+   ["Kirim kata sandi saja, tetapi kode OTP jangan",0,"Kata sandi juga rahasia. Jangan berikan keduanya!"]]),
+  hint:"Hadiah yang datang tiba-tiba dan minta kata sandi itu patut dicurigai."},
+ {id:"D.explore",name:"Kenali",type:"hot",say:"Kenali dulu musuhnya. Tekan setiap kartu!",
+  intro:"Phishing adalah penipuan online yang berusaha mengambil data pribadi. Ini tiga hal yang perlu kamu ketahui:",
+  items:[
+  {id:"ph",icon:"🎣",name:"Apa itu phishing?",title:"Phishing: memancing korban",body:"Kata phishing berasal dari “fishing” (memancing). Penipu memasang “umpan” berupa pesan, tautan, atau situs palsu supaya kamu memberikan data pribadi.",analogy:"Seperti pemancing yang memberi umpan lezat agar ikan menggigit.",example:"Bisa lewat SMS, WhatsApp, email, media sosial, bahkan game."},
+  {id:"dp",icon:"🔑",name:"Data pribadi",title:"Data pribadi: kunci rumah digitalmu",body:"Data pribadi adalah informasi tentang dirimu yang bisa dipakai untuk mengenali atau menemukan dirimu: kata sandi, alamat rumah, nomor HP, tanggal lahir, dan kode OTP.",analogy:"Seperti kunci rumah: tidak boleh diberikan kepada sembarang orang.",example:"Tanyakan orang dewasa dulu sebelum membagikan nama lengkap, foto wajah, atau nama sekolahmu."},
+  {id:"bpt",icon:"🛡️",name:"Berhenti, Periksa, Tanya",title:"Tiga langkah perisai",body:"BERHENTI: jangan klik dan jangan balas. PERIKSA: siapa pengirimnya dan apa yang diminta? TANYA: tunjukkan kepada guru atau orang tua, lalu blokir dan laporkan.",analogy:"Seperti lampu lalu lintas: berhenti dulu sebelum jalan.",example:"Jika ragu, jangan klik. Menunggu tidak pernah merugikan."}]},
+ {id:"D.sort",name:"Pilah Data",type:"sort",say:"Mana data yang harus dirahasiakan, mana yang boleh dibagikan dengan bijak?",
+  hint:"Kalau penipu memakainya, apakah kamu bisa dirugikan atau dicari?",
+  buckets:[{id:"r",name:"Rahasia! Jangan dibagikan",icon:"🔒"},{id:"b",name:"Boleh dibagikan dengan bijak",icon:"💬"}],
+  items:[
+  {t:"Kata sandi akunku",b:"r",why:"Kata sandi adalah kunci akunmu. Tidak boleh diberikan kepada siapa pun."},
+  {t:"Kode OTP yang masuk ke HP",b:"r",why:"OTP membuktikan bahwa itu kamu. Jika orang lain tahu, akunmu bisa dibobol."},
+  {t:"Alamat rumahku",b:"r",why:"Alamat rumah membuat orang asing bisa menemukanmu."},
+  {t:"Nomor HP orang tuaku",b:"r",why:"Nomor HP bisa dipakai untuk menipu atau mengganggu."},
+  {t:"Hobiku menggambar",b:"b",why:"Hobi tidak membahayakan. Tetap bagikan dengan bijak dan sopan."},
+  {t:"Warna favoritku",b:"b",why:"Warna favorit tidak bisa dipakai penipu untuk merugikanmu."},
+  {t:"Poster karya buatanku sendiri",b:"b",why:"Karya yang sudah diperiksa dan tanpa data pribadi boleh dibagikan."},
+  {t:"Makanan favoritku",b:"b",why:"Makanan favorit bukan data rahasia."}]},
+ {id:"D.detect",name:"Detektif",type:"detect",say:"Temukan 5 tanda bahaya pada pesan ini. Tekan bagian pesan yang mencurigakan!"},
+ {id:"D.judge",name:"Aman atau Phishing?",type:"quiz",say:"Tentukan: pesan ini aman atau phishing? Perhatikan alasannya.",xp:5,
+  qs:[
+  Q("Apakah pesan ini aman atau phishing?",[["Aman",1,"Aman. Pengirimnya dikenal, isinya sesuai kegiatan kelas, dan tidak meminta data rahasia. Jika ragu, tanyakan langsung ke guru."],["Phishing",0,"Pesan ini sesuai kegiatan kelas dari pengirim yang dikenal dan tidak meminta data rahasia. Jadi tidak mencurigakan."]],
+   "💬 Pak Guru (kontak di grup kelas): “Anak-anak, poster dikumpulkan lewat Google Classroom kelas yang sudah kita pakai, paling lambat hari Jumat.”"),
+  Q("Apakah pesan ini aman atau phishing?",[["Aman",0,"Bukan aman! Pesan ini membuat panik dan meminta PIN, yaitu data yang sangat rahasia."],["Phishing",1,"Tepat! Ada ancaman “diblokir”, tautan asing, dan permintaan PIN. Jangan klik; tunjukkan ke orang tua."]],
+   "📱 “[BANK] Akun orang tuamu DIBLOKIR! Klik tautan ini dan masukkan PIN ATM sekarang.”"),
+  Q("Apakah pesan ini aman atau phishing?",[["Aman",0,"Bukan aman! Hadiah gratis dan permintaan kata sandi game adalah umpan klasik."],["Phishing",1,"Benar! Hadiah gratis berlebihan plus permintaan email dan kata sandi game adalah ciri phishing."]],
+   "🎮 “Game Petualang membagikan 1000 diamond GRATIS! Masukkan email dan kata sandi game-mu di sini.”"),
+  Q("Apakah pesan ini aman atau phishing?",[["Aman",1,"Aman. Pesan dari teman di grup kelas, tanpa tautan atau permintaan data. Kalau ragu, kamu bisa bertanya langsung."],["Phishing",0,"Pesan ini hanya mengubah jadwal kelompok, tanpa tautan dan tanpa permintaan data. Tidak ada ciri phishing."]],
+   "👧 Dina (teman sekelas, di grup kelas): “Rapat kelompok dipindah jadi jam 2 ya. Kata Bu Ani tadi di kelas.”")]},
+ {id:"D.sum",name:"Rangkuman",type:"sum",say:"Kamu sudah jadi detektif! Ingat tiga langkah perisai.",
+  center:"Aman dari Phishing",branches:["🛑 BERHENTI: jangan klik, jangan balas","🔍 PERIKSA: siapa pengirim, apa yang diminta","🙋 TANYA: orang dewasa tepercaya","🔒 Rahasiakan kata sandi dan OTP","🚫 Blokir dan laporkan"],
+  kw:["phishing","data pribadi","kata sandi","OTP","tautan","pengirim"],
+  myth:[["Phishing hanya lewat email.","Phishing juga lewat SMS, WhatsApp, media sosial, dan game."],["Penipu hanya mengincar orang dewasa.","Anak-anak juga sering menjadi sasaran, misalnya lewat hadiah game."],["Kalau pesannya dari kontak temanku, pasti aman.","Akun teman bisa saja dibobol. Jika isinya aneh, tanya langsung ke temanmu lewat cara lain."]],
+  bonus:Q("Misi Bonus: Mengapa penipu sering menulis “hadiah hangus dalam 10 menit!”?",[
+   ["Agar korban panik dan tidak sempat berpikir atau bertanya",1,"Benar! Rasa terburu-buru membuat orang lupa memeriksa."],
+   ["Karena hadiah memang cepat habis",0,"Hadiahnya sendiri biasanya palsu. Batas waktu hanya untuk menekan korban."],
+   ["Supaya pesan terlihat lebih pendek",0,"Tujuannya menekan korban agar bertindak cepat, bukan memendekkan pesan."]])}
+ ]},
+
+{id:"E",col:"e",icon:"🤝",title:"Bijak dan Bertanggung Jawab di Internet",sub:"Pilih tindakan terbaik",tp:"TP 6",dpl:["Keimanan dan Ketakwaan","Kewargaan","Kesehatan"],
+ steps:[
+ {id:"E.story",name:"Cerita",type:"story",say:"Di internet, setiap klik punya akibat. Yuk, pikirkan bersama!",
+  pic:"💬📢",text:"Di grup kelas tiba-tiba ada pesan: “BERITA PENTING!! Sekolah libur seminggu! Sebarkan ke semua teman!” Tidak ada nama pengirim yang jelas dan tidak ada sumber resmi.",
+  q:Q("Apa yang sebaiknya dilakukan Raka?",[
+   ["Langsung meneruskan ke semua teman",0,"Kalau ternyata bohong, Raka ikut menyebarkan hoaks. Coba lagi!"],
+   ["Cek dulu ke guru atau sumber resmi sekolah sebelum membagikan",1,"Tepat! Menyaring sebelum membagikan adalah sikap jujur dan bertanggung jawab."],
+   ["Percaya saja karena sudah banyak yang membagikan",0,"Banyaknya pembagi tidak berarti benar. Coba lagi!"]]),
+  hint:"Kabar yang belum jelas sumbernya sebaiknya diperiksa dulu."},
+ {id:"E.scen",name:"Pilih Tindakan",type:"quiz",say:"Tiga situasi nyata. Pilih tindakan terbaik. Kalau belum tepat, kamu boleh mencoba lagi.",xp:7,
+  qs:[
+  Q("Apa tindakan terbaik untukmu?",[
+   ["Ikut menulis komentar lucu supaya ramai",0,"Ikut menertawakan berarti ikut menyakiti Rafi."],
+   ["Membalas dengan kata-kata kasar",0,"Membalas kasar tidak menyelesaikan masalah dan bisa menambah luka."],
+   ["Tidak ikut-ikutan, menyemangati Rafi, dan melaporkan komentar jahat kepada guru atau orang tua atau lewat fitur lapor",1,"Tepat! Berempati dan melapor adalah wujud peduli dan bertanggung jawab."]],
+   "💬 Di kolom komentar video Rafi ada yang menulis: “Videomu jelek banget!” Banyak yang ikut menertawakan."),
+  Q("Apa pertimbangan terbaik untuk Dimas?",[
+   ["Posting saja, kan bangga",0,"Bangga itu baik, tetapi kartu pelajar memuat data pribadi yang bisa disalahgunakan."],
+   ["Jangan posting, karena memuat data pribadi dan jejak digitalnya bisa tersimpan lama",1,"Benar! Pamerkan prestasinya dengan cara yang tidak membuka data pribadi."],
+   ["Posting, tetapi tutup namanya saja",0,"Alamat rumah masih terlihat. Sebaiknya tidak diposting."]],
+   "📸 Dimas ingin memposting foto kartu pelajarnya lengkap dengan alamat rumah karena bangga."),
+  Q("Apa yang sebaiknya Sari lakukan?",[
+   ["Lanjut saja, tidur belakangan",0,"Kurang tidur membuat sulit berpikir dan mengganggu kesehatan."],
+   ["Mematikan layar dan beristirahat, lalu mengatur jadwal waktu layar bersama orang tua",1,"Tepat! Tubuh dan pikiran perlu istirahat. Jadwal waktu layar membantu tetap seimbang."],
+   ["Pindah ke tablet saja supaya layarnya lain",0,"Mengganti perangkat tidak mengurangi waktu layar."]],
+   "🌙 Sudah jam 10 malam. Sari masih bermain game dan menonton video, padahal besok ada ulangan.")]},
+ {id:"E.pledge",name:"Janji Digital",type:"pledge",say:"Pilih minimal 3 janji yang akan kamu tepati, lalu buat Janji Warga Digitalmu!"},
+ {id:"E.sum",name:"Rangkuman",type:"sum",say:"Ingat tiga B sebelum membagikan sesuatu!",
+  center:"Bijak di Internet",branches:["✅ Benar: cek sumber dulu","💛 Baik: sopan, tidak menyakiti","🎁 Bermanfaat: untuk belajar dan berkarya","🔐 Jaga data pribadi","⏰ Atur waktu layar"],
+  kw:["hoaks","jejak digital","perundungan siber","etika","waktu layar"],
+  myth:[["Di internet tidak ada yang tahu siapa aku, jadi boleh bicara apa saja.","Setiap tindakan tetap ada akibatnya dan meninggalkan jejak digital."],["Hanya bercanda, jadi tidak apa-apa.","Candaan yang menyakiti tetap melukai orang lain."],["Menyebarkan kabar yang belum jelas itu tidak apa-apa.","Jika bohong, kamu ikut menyebarkan hoaks. Cek dulu."]],
+  bonus:Q("Misi Bonus: Apa yang dimaksud dengan jejak digital?",[
+   ["Semua hal yang pernah kamu unggah atau lakukan di internet yang bisa tersimpan lama",1,"Benar! Karena itu pikirkan dulu sebelum mengunggah."],
+   ["Bekas jari di layar tabletmu",0,"Itu hanya sidik jari di layar. Jejak digital adalah rekam aktivitasmu di internet."],
+   ["Nama lain untuk kabel internet",0,"Jejak digital bukan alat. Ia adalah rekam aktivitasmu di internet."]])}
+ ]}
+];
+
+/* ============ data: final quiz ============ */
+const FQ=[
+{type:"mc",lv:"C2",tag:["A"],pts:8,q:"Apa yang dimaksud dengan internet?",opts:[["Jaringan raksasa yang menghubungkan banyak komputer di seluruh dunia",1,"Benar! Internet menghubungkan jutaan komputer dan jaringan."],["Sebuah aplikasi untuk menonton video",0,"Aplikasi hanya berjalan di perangkat. Internet adalah jaringan penghubung."],["Nama lain dari Wi-Fi",0,"Wi-Fi hanya cara tersambung tanpa kabel."]]},
+{type:"mc",lv:"C2",tag:["A"],pts:8,q:"Apa tugas router?",opts:[["Menyimpan semua video di dunia",0,"Itu tugas server."],["Mengatur lalu lintas data dan menyambungkan jaringan rumah ke internet",1,"Benar! Router seperti petugas pos di gerbang."],["Membuka website dengan mengetik URL",0,"Itu tugas browser."]]},
+{type:"mc",lv:"C1",tag:["A"],pts:8,q:"Alamat sebuah halaman web yang kita ketik di browser disebut …",opts:[["Router",0,"Router adalah alat pengatur data."],["Server",0,"Server adalah komputer penyimpan data."],["URL",1,"Benar! URL adalah alamat halaman web."]]},
+{type:"mc",lv:"C2",tag:["B"],pts:8,q:"Benar atau salah? “Foto yang dicetak di kertas adalah konten digital.”",opts:[["Benar",0,"Foto cetak adalah benda nyata, bukan data."],["Salah",1,"Benar! Yang digital adalah file fotonya, bukan kertas cetaknya."]]},
+{type:"mc",lv:"C3",tag:["B"],pts:8,q:"Rina merekam suaranya membaca puisi dan menyimpannya sebagai file MP3. Jenis konten digital yang Rina buat adalah …",opts:[["Audio",1,"Benar! Rekaman suara adalah audio."],["Gambar",0,"Gambar dilihat, bukan didengar."],["Teks",0,"Teks berupa tulisan."]]},
+{type:"mc",lv:"C2",tag:["D"],pts:8,q:"Benar atau salah? “Kode OTP boleh diberikan kepada teman supaya akunmu cepat dipulihkan.”",opts:[["Benar",0,"OTP rahasia. Orang yang tahu OTP bisa masuk ke akunmu."],["Salah",1,"Benar! OTP tidak boleh diberikan kepada siapa pun, termasuk teman."]]},
+{type:"fill",lv:"C1",tag:["D"],pts:8,q:"Isi titik-titik: Penipuan online yang memancing kita agar menyerahkan data pribadi lewat pesan atau situs palsu disebut …",ans:["phishing","pishing","fishing"],std:"phishing",okfb:"Benar! Phishing berasal dari kata fishing yang berarti memancing.",nofb:"Belum tepat. Petunjuk: kata ini berasal dari “fishing” (memancing) dan diawali huruf p."},
+{type:"mc",lv:"C4",tag:["D"],pts:12,q:"Pesan dari nomor tak dikenal: “Akunmu akan DIHAPUS hari ini! Klik tautan ini dan masukkan kata sandimu.” Bagian mana yang PALING kuat menunjukkan bahwa ini phishing?",opts:[["Pesan itu memakai tanda seru",0,"Tanda seru saja tidak membuktikan penipuan. Cari yang berkaitan dengan data."],["Pesan membuat panik dengan batas waktu dan meminta kata sandi lewat tautan",1,"Tepat! Menekan korban dan meminta data rahasia lewat tautan adalah ciri utama phishing."],["Pesan dikirim pada malam hari",0,"Waktu pengiriman tidak menentukan apakah pesan itu penipuan."],["Pesan ditulis dengan huruf besar",0,"Huruf besar hanya gaya penulisan. Bukan bukti yang kuat."]]},
+{type:"mc",lv:"C5",tag:["C","E"],pts:12,q:"Dimas merekam temannya yang terjatuh di lapangan dan ingin mengunggahnya supaya lucu. Keputusan yang paling bertanggung jawab adalah …",opts:[["Mengunggahnya karena hanya bercanda",0,"Bercanda yang mempermalukan tetap menyakiti, dan jejak digitalnya bertahan lama."],["Tidak mengunggahnya dan menghapus video itu, karena bisa mempermalukan temannya. Jika ingin membagikan, minta izin dan pilih konten yang positif",1,"Tepat! Kamu mempertimbangkan perasaan, izin, dan dampak jangka panjang."],["Mengunggahnya, tetapi di akun tanpa nama",0,"Tanpa nama tidak menghilangkan rasa malu temannya, dan itu tidak jujur."],["Mengirimkannya ke grup agar dinilai teman-teman",0,"Menyebarkan lebih luas membuat dampaknya makin besar."]]},
+{type:"essay",lv:"C6",tag:["C","E"],pts:20,q:"Buatlah “Janji Warga Digital” untuk kelasmu. Tulis 2 sampai 4 kalimat berisi aturan yang menurutmu penting saat memakai internet."}
+];
+const ESSAY_RUBRIC=[
+ {re:/cek|periksa|sumber|benar|hoaks|verifikasi|saring/i,t:"Memeriksa kebenaran atau sumber informasi",tip:"Tambahkan aturan tentang mengecek kabar sebelum membagikan."},
+ {re:/izin|permisi|meminta/i,t:"Meminta izin sebelum membagikan foto atau karya orang lain",tip:"Tambahkan aturan tentang meminta izin."},
+ {re:/sopan|santun|baik|hormat|menghargai|tidak menyakiti|ramah|jujur/i,t:"Bersikap sopan, jujur, dan menghargai orang lain",tip:"Tambahkan aturan tentang bersikap sopan dan jujur."},
+ {re:/data pribadi|kata sandi|password|sandi|rahasia|otp|alamat/i,t:"Menjaga data pribadi dan kata sandi",tip:"Tambahkan aturan tentang menjaga data pribadi."}];
+
+/* ============ shared widgets ============ */
+function choiceBlock(q,o){
+  o=o||{};
+  const fb=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  let tries=0,solved=false;
+  const two=q.opts.length===2;
+  const btns=q.opts.map((op,i)=>h("button",{class:"opt",type:"button",onclick:()=>pick(i)},h("span",{class:"ol","aria-hidden":"true"},String.fromCharCode(65+i)),h("span",null,op.t)));
+  function lock(){btns.forEach(b=>b.disabled=true);}
+  function pick(i){
+    if(solved)return; const op=q.opts[i],b=btns[i]; tries++;
+    if(op.ok){ solved=true; b.classList.add("right"); b.querySelector(".ol").textContent="✓"; fb.className="fb good"; fb.textContent="✓ "+op.fb; lock(); o.onDone&&o.onDone(tries===1,i); }
+    else if(o.once){ solved=true; b.classList.add("wrong"); b.querySelector(".ol").textContent="✗"; const ci=q.opts.findIndex(x=>x.ok); btns[ci].classList.add("right"); btns[ci].querySelector(".ol").textContent="✓"; fb.className="fb bad"; fb.textContent="✗ "+op.fb+" Jawaban yang tepat: "+q.opts[ci].fb; lock(); o.onDone&&o.onDone(false,i); }
+    else { b.classList.add("wrong","shake"); b.querySelector(".ol").textContent="✗"; b.disabled=true; fb.className="fb bad"; fb.textContent="✗ "+op.fb+" Coba pilihan lain!"; }
+  }
+  return h("div",{class:"qblock"},o.label&&h("div",{class:"muted",style:"font-weight:800"},o.label),q.ctx&&h("div",{class:"ctx"},q.ctx),h("div",{class:"qt"},q.q),h("div",{class:"opts"+(two?" two":"")},btns),fb);
+}
+function hintBox(text){
+  if(!text)return null;
+  if(S.jalur==="pemandu") return h("div",{class:"hintbox"},"💡 Petunjuk Piko: "+text);
+  const box=h("div");
+  const btn=h("button",{class:"btn ghost sm",type:"button",onclick:()=>{box.replaceChildren(h("div",{class:"hintbox"},"💡 Petunjuk Piko: "+text));}},"💡 Minta petunjuk");
+  box.append(btn); return box;
+}
+function collab(text,key){
+  const cb=h("input",{type:"checkbox",id:"cb-"+key,onchange:e=>{ if(e.target.checked) award(5,"collab-"+key); }});
+  return h("div",{class:"hintbox",style:"background:var(--b-bg)"},h("label",{for:"cb-"+key,style:"display:flex;gap:10px;align-items:flex-start;font-weight:700;cursor:pointer"},cb,h("span",null,"🤝 Tantangan Kolaborasi: "+text)));
+}
+
+/* ============ step renderers ============ */
+const R={};
+R.story=(c,x)=>{
+  const wrap=h("div");
+  wrap.append(h("div",{class:"scene","aria-hidden":"true"},c.pic),h("p",null,c.text));
+  wrap.append(choiceBlock(c.q,{onDone:(first)=>x.done(first?5:3)}));
+  wrap.append(hintBox(c.hint)); return wrap;
+};
+R.hot=(c,x)=>{
+  const seen=new Set();
+  const detail=h("div",{class:"detail",role:"region","aria-live":"polite"},h("p",{class:"muted"},"Tekan salah satu kartu di atas untuk menjelajah."));
+  const prog=h("p",{class:"prog"},"Dijelajahi: 0 dari "+c.items.length);
+  const btns=c.items.map(it=>h("button",{class:"hs-btn",type:"button","aria-pressed":"false",onclick:ev=>{
+    btns.forEach(b=>b.setAttribute("aria-pressed","false")); ev.currentTarget.setAttribute("aria-pressed","true"); ev.currentTarget.classList.add("seen"); seen.add(it.id);
+    detail.replaceChildren(h("h3",null,it.title),h("p",null,it.body),it.analogy&&h("p",{class:"analogy"},"🧩 Analogi: "+it.analogy),it.example&&h("p",null,"📌 "+it.example),it.format&&h("p",null,"Format file umum: ",it.format.map(f=>h("span",{class:"chip fmt"},f))));
+    prog.textContent="Dijelajahi: "+seen.size+" dari "+c.items.length+(seen.size===c.items.length?" 🎉 Semua selesai!":"");
+    if(seen.size===c.items.length) x.done(15);
+  }},h("span",{class:"hs-ic","aria-hidden":"true"},it.icon),h("span",null,it.name)));
+  const kids=[]; btns.forEach((b,i)=>{kids.push(b); if(c.arrows&&i<btns.length-1)kids.push(h("span",{class:"arrow","aria-hidden":"true"},"➜"));});
+  return h("div",null,h("p",null,c.intro),h("div",{class:"hs "+(c.arrows?"row":"grid")},kids),prog,detail);
+};
+R.order=(c,x)=>{
+  const n=c.items.length; let k=0,wrong=0;
+  const slots=h("ol",{class:"slots"},c.items.map((_,i)=>h("li",{class:"slot"},h("span",{class:"sn"},i+1),h("span",{class:"stx"},"…"))));
+  const msg=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  const pool=h("div",{class:"pool"});
+  shuffle(c.items.map((it,i)=>({it,i}))).forEach(o=>{
+    const b=h("button",{class:"cs",type:"button",onclick:()=>{
+      if(o.i===k){ const s=slots.children[k]; s.classList.add("filled"); s.querySelector(".stx").textContent=o.it.t; b.remove(); k++; msg.className="fb good";
+        if(k===n){ msg.textContent="🎉 Urutan lengkap! Itulah perjalanan satu paket data."; x.done(Math.max(8,20-wrong*3)); } else msg.textContent="✓ Tepat! Lanjut ke langkah "+(k+1)+"."; }
+      else { wrong++; b.classList.add("shake"); setTimeout(()=>b.classList.remove("shake"),400); msg.className="fb bad"; msg.textContent="✗ Belum tepat. Petunjuk untuk langkah "+(k+1)+": "+c.items[k].cue; }
+    }},o.it.t); pool.append(b);
+  });
+  return h("div",null,h("p",null,"Tekan kartu sesuai urutan. Kartu yang tepat akan masuk ke tempatnya."),slots,h("div",{class:"muted",style:"font-weight:800"},"Kartu perjalanan:"),pool,msg,hintBox(c.hint));
+};
+R.match=(c,x)=>{
+  const n=c.pairs.length; let sel=null,matched=0,wrong=0;
+  const msg=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  const mk=(o,side)=>{const b=h("button",{class:"mt",type:"button",onclick:()=>click(b,o,side)},o.t);return b;};
+  function click(b,o,side){
+    if(b.disabled)return;
+    if(side==="l"){ if(sel)sel.b.classList.remove("sel"); sel={b,o}; b.classList.add("sel"); msg.className="fb"; msg.textContent="Sekarang pilih artinya di kolom kanan."; return; }
+    if(!sel){ msg.className="fb"; msg.textContent="Pilih istilah di kolom kiri dulu, ya."; return; }
+    if(sel.o.i===o.i){ sel.b.classList.remove("sel"); sel.b.classList.add("ok"); b.classList.add("ok"); sel.b.disabled=true; b.disabled=true; matched++; sel=null; msg.className="fb good"; msg.textContent="✓ Cocok!"; if(matched===n){ msg.textContent="🎉 Semua pasangan benar!"; x.done(Math.max(8,20-wrong*2)); } }
+    else { wrong++; b.classList.add("shake"); setTimeout(()=>b.classList.remove("shake"),400); msg.className="fb bad"; msg.textContent="✗ Belum cocok. Petunjuk: "+c.pairs[sel.o.i].clue; sel.b.classList.remove("sel"); sel=null; }
+  }
+  const L=shuffle(c.pairs.map((p,i)=>({t:p.l,i}))).map(o=>mk(o,"l")); const Rr=shuffle(c.pairs.map((p,i)=>({t:p.r,i}))).map(o=>mk(o,"r"));
+  // re-bind with objects
+  const Lo=shuffle(c.pairs.map((p,i)=>({t:p.l,i}))),Ro=shuffle(c.pairs.map((p,i)=>({t:p.r,i})));
+  return h("div",null,h("p",null,"Pilih istilah di kiri, lalu pilih artinya di kanan."),h("div",{class:"mcols"},h("div",null,Lo.map(o=>mk(o,"l"))),h("div",null,Ro.map(o=>mk(o,"r")))),msg,hintBox(c.hint));
+};
+R.sort=(c,x)=>{
+  let sel=null,left=c.items.length,wrong=0; const cards=[],lists={};
+  const msg=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  function place(i,bid){
+    const it=c.items[i],card=cards[i]; if(!card||card.disabled)return;
+    if(it.b===bid){ card.classList.remove("sel"); card.disabled=true; card.draggable=false; lists[bid].append(card); sel=null; left--; msg.className="fb good"; msg.textContent="✓ "+it.why; if(left===0){ msg.textContent="🎉 Semua kartu sudah tepat!"; x.done(Math.max(8,20-wrong*2)); } }
+    else { wrong++; card.classList.add("shake"); setTimeout(()=>card.classList.remove("shake"),400); msg.className="fb bad"; msg.textContent="✗ Belum tepat. "+it.why; }
+  }
+  const pool=h("div",{class:"pool"});
+  shuffle(c.items.map((_,i)=>i)).forEach(i=>{
+    const card=h("button",{class:"cs",type:"button",draggable:"true","aria-pressed":"false",
+      ondragstart:e=>{e.dataTransfer.setData("text/plain",String(i));},
+      onclick:()=>{ cards.forEach(cc=>cc.classList.remove("sel")); if(sel===i){sel=null;return;} sel=i; card.classList.add("sel"); msg.className="fb"; msg.textContent="Sekarang tekan kotak tujuannya."; }},c.items[i].t);
+    cards[i]=card; pool.append(card);
+  });
+  const buckets=h("div",{class:"buckets"},c.buckets.map(bk=>{
+    const list=h("div",{class:"bk-list"}); lists[bk.id]=list;
+    const el=h("div",{class:"bucket",tabindex:"0",role:"button","aria-label":"Kotak "+bk.name,
+      ondragover:e=>{e.preventDefault();el.classList.add("over");},ondragleave:()=>el.classList.remove("over"),
+      ondrop:e=>{e.preventDefault();el.classList.remove("over");const id=parseInt(e.dataTransfer.getData("text/plain"),10);if(!isNaN(id))place(id,bk.id);},
+      onclick:()=>{ if(sel!=null)place(sel,bk.id); },
+      onkeydown:e=>{ if((e.key==="Enter"||e.key===" ")&&sel!=null){e.preventDefault();place(sel,bk.id);} }},
+      h("div",{class:"bk-h"},bk.icon+" "+bk.name),list);
+    return el;}));
+  return h("div",null,h("p",null,"Tekan kartu lalu tekan kotaknya, atau seret kartu ke kotak yang tepat."),pool,buckets,msg,hintBox(c.hint));
+};
+R.quiz=(c,x)=>{
+  let solvedN=0; const n=c.qs.length;
+  const prog=h("p",{class:"prog"},"Terjawab benar: 0 dari "+n);
+  const blocks=c.qs.map((q,i)=>choiceBlock(q,{label:"Soal "+(i+1)+" dari "+n,onDone:(first)=>{ solvedN++; prog.textContent="Terjawab benar: "+solvedN+" dari "+n; award(first?c.xp:Math.max(1,c.xp-3),"q-"+c.id+i); if(solvedN===n) x.done(0); }}));
+  return h("div",null,prog,blocks);
+};
+R.poster=(c,x)=>{
+  const COLORS=[{n:"Biru Laut",bg:"#0B6FD1",fg:"#FFFFFF"},{n:"Hijau Daun",bg:"#0E8F5F",fg:"#FFFFFF"},{n:"Kuning Mentari",bg:"#FFC22E",fg:"#1B2160"},{n:"Ungu Senja",bg:"#5B3CE0",fg:"#FFFFFF"}];
+  const STK=["💧","🌳","🔒","🌈","🐠","⭐"];
+  const IDEAS=[{k:"Hemat Air",j:"Setetes Air Sangat Berarti",p:"Tutup keran saat menyikat gigi supaya air tidak terbuang.",s:"💧",c:0},{k:"Jaga Kebersihan",j:"Bumi Bersih, Hati Senang",p:"Buang sampah pada tempatnya dan pilah sampah dari rumah.",s:"🌳",c:1},{k:"Aman di Internet",j:"Pikir Dulu, Baru Klik",p:"Jaga kata sandimu dan tanya orang dewasa jika ada pesan aneh.",s:"🔒",c:3}];
+  const st={j:"",p:"",c:0,s:null,ok:false,saved:false};
+  const em=h("div",{class:"em","aria-hidden":"true"},"🖼️"),pt=h("div",{class:"pt"},"Judul posterku"),pm=h("div",{class:"pm"},"Pesan singkat dan bermanfaat akan tampil di sini."),by=h("div",{class:"by"},"Dibuat oleh "+firstName());
+  const poster=h("div",{class:"poster",role:"img","aria-label":"Pratinjau poster"},em,pt,pm,by);
+  const chk=h("ul",{class:"chk","aria-live":"polite"});
+  const fbk=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  const saveBtn=h("button",{class:"btn mint",type:"button",disabled:true,onclick:()=>{ if(st.saved)return; st.saved=true; saveBtn.disabled=true; fbk.className="fb good"; fbk.textContent="🎉 Posterku tersimpan! Tunjukkan ke gurumu atau teman sebangku."; x.done(30); }},"💾 Simpan karyaku");
+  const reviewCb=h("input",{type:"checkbox",id:"rev",onchange:update});
+  function colorSwatches(){ return COLORS.map((co,i)=>h("button",{type:"button",style:"background:"+co.bg,"aria-label":co.n,"aria-pressed":String(st.c===i),onclick:()=>{st.c=i;paint();update();}})); }
+  const swWrap=h("div",{class:"sw"}); const stkWrap=h("div",{class:"sw stk"});
+  function paint(){
+    const co=COLORS[st.c]; poster.style.background=co.bg; poster.style.color=co.fg;
+    em.textContent=st.s||"🖼️"; pt.textContent=st.j.trim()||"Judul posterku"; pm.textContent=st.p.trim()||"Pesan singkat dan bermanfaat akan tampil di sini.";
+    swWrap.replaceChildren(...colorSwatches());
+    stkWrap.replaceChildren(...STK.map(s=>h("button",{type:"button","aria-pressed":String(st.s===s),"aria-label":"Stiker "+s,onclick:()=>{st.s=s;paint();update();}},s)));
+  }
+  function update(){
+    const j=st.j.trim(),p=st.p.trim(),pii=/\d{6,}|@|\bjl\b\.?|\bjalan\b|\brt\s?\d|alamat/i.test(j+" "+p);
+    const checks=[[j.length>=3&&j.length<=32,"Judul jelas (3–32 huruf)"],[p.length>=10&&p.length<=100,"Pesan singkat dan bermanfaat (10–100 huruf)"],[!!st.s,"Ada gambar atau stiker pendukung"],[!pii&&(j+p).length>0,"Tidak berisi data pribadi (nomor, alamat, email)"],[true,"Ada nama pembuat (cukup nama depan)"]];
+    chk.replaceChildren(...checks.map(c=>h("li",{class:c[0]?"ok":(pii&&c[1].startsWith("Tidak")?"warn":"no")},(c[0]?"✓ ":(pii&&c[1].startsWith("Tidak")?"⚠ ":"○ "))+c[1])));
+    const all=checks.every(c=>c[0])&&reviewCb.checked;
+    if(!st.saved) saveBtn.disabled=!all;
+    if(pii){ fbk.className="fb bad"; fbk.textContent="⚠ Hati-hati: posterku sepertinya memuat data pribadi. Hapus dulu sebelum dibagikan."; } else if(!st.saved){ fbk.className="fb"; fbk.textContent=""; }
+  }
+  const jIn=h("input",{type:"text",id:"pj",maxlength:"32",placeholder:"Contoh: Setetes Air Sangat Berarti",oninput:e=>{st.j=e.target.value;paint();update();}});
+  const pIn=h("textarea",{id:"pp",rows:"3",maxlength:"100",placeholder:"Tulis satu pesan yang bermanfaat",oninput:e=>{st.p=e.target.value;paint();update();}});
+  const ideaRow=S.jalur==="penjelajah"?h("p",{class:"hintbox"},"🚀 Jalur Penjelajah: tulis idemu sendiri. Pilih tema yang kamu pedulikan!"):h("div",{class:"row"},h("span",{style:"font-weight:800"},"Butuh ide?"),IDEAS.map(id=>h("button",{class:"btn ghost sm",type:"button",onclick:()=>{st.j=id.j;st.p=id.p;st.s=id.s;st.c=id.c;jIn.value=id.j;pIn.value=id.p;paint();update();}},id.k)));
+  paint(); update();
+  const form=h("div",null,h("p",null,"Rancang poster digitalmu: tulis judul dan pesan, pilih warna dan stiker. Pratinjau akan berubah langsung!"),ideaRow,
+    h("label",{class:"lb",for:"pj"},"Judul poster"),jIn,h("label",{class:"lb",for:"pp"},"Pesan singkat"),pIn,
+    h("div",{class:"lb"},"Warna latar"),swWrap,h("div",{class:"lb"},"Stiker"),stkWrap,
+    h("div",{class:"lb"},"Daftar periksa otomatis"),chk,
+    h("label",{for:"rev",style:"display:flex;gap:10px;font-weight:700;align-items:flex-start;cursor:pointer;margin:8px 0"},reviewCb,h("span",null,"Aku sudah membaca ulang: isinya benar, sopan, dan bermanfaat.")),
+    saveBtn,fbk,collab("Tukar posterku dengan teman sebangku. Beri 1 pujian dan 1 saran untuk karyanya.","poster"));
+  return h("div",{class:"maker"},form,h("div",null,poster));
+};
+R.detect=(c,x)=>{
+  const SEG=[
+   {t:"Dari: nomor tidak dikenal (+62 8•• •••• 0912)",f:"Pengirim tidak dikenal",w:"Pesan resmi biasanya datang dari pengirim yang kamu kenal. Nomor asing patut dicurigai.",meta:true},
+   {t:"Halo, Teman! ",d:"Sapaan ramah itu tidak berbahaya, tetapi penipu sering memakai sapaan ramah. Lihat bagian lain yang meminta sesuatu."},
+   {t:"Selamat! Kamu memenangkan 1 tablet GRATIS tanpa ikut undian. ",f:"Hadiah tiba-tiba",w:"Kamu tidak pernah ikut undian, tetapi tiba-tiba menang. Itu umpan untuk memancing."},
+   {t:"Klik http://hadiah-tablet-gratis.xyz ",f:"Tautan aneh",w:"Alamat web tidak jelas dan tidak berasal dari toko resmi. Tautan seperti ini bisa mengarah ke situs palsu."},
+   {t:"Hadiah hangus dalam 10 menit! ",f:"Desakan waktu",w:"Penipu membuatmu terburu-buru supaya tidak sempat berpikir atau bertanya."},
+   {t:"Kirim kata sandi akunmu dan kode OTP yang masuk ke HP-mu supaya hadiah bisa dikirim. ",f:"Meminta data rahasia",w:"Kata sandi dan OTP tidak boleh diberikan kepada siapa pun. Ini tanda bahaya terbesar."},
+   {t:"Terima kasih atas perhatiannya.",d:"Kalimat sopan itu bukan tanda bahaya. Perhatikan permintaan dan tautannya."}];
+  const total=SEG.filter(s=>s.f).length; let found=0,wrong=0;
+  const list=h("div",{class:"found-list","aria-live":"polite"});
+  const prog=h("p",{class:"prog"},"Tanda bahaya ditemukan: 0 dari "+total);
+  const msg=h("div",{class:"fb",role:"status","aria-live":"polite"});
+  const parts=SEG.map(s=>h("button",{class:"seg",type:"button",onclick:ev=>{
+    const b=ev.currentTarget; if(b.classList.contains("found"))return;
+    if(s.f){ b.classList.add("found"); found++; list.append(h("div",{class:"flag"},"🚩 "+s.f+": "+s.w)); prog.textContent="Tanda bahaya ditemukan: "+found+" dari "+total; msg.className="fb good"; msg.textContent="✓ Bagus! Satu tanda bahaya ditemukan."; if(found===total){ msg.textContent="🎉 Semua tanda bahaya ditemukan! Kamu detektif yang jeli."; x.done(Math.max(10,25-wrong*3)); } }
+    else { wrong++; b.classList.add("shake"); setTimeout(()=>b.classList.remove("shake"),400); msg.className="fb"; msg.textContent="🤔 "+s.d; }
+  }},s.t));
+  const meta=parts[0]; meta.parentNode;
+  return h("div",null,h("p",null,"Baca pesan ini baik-baik. Tekan bagian yang menurutmu mencurigakan. Hati-hati, ada bagian yang tidak berbahaya!"),
+    h("div",{class:"msg"},h("div",{class:"meta"},parts[0]),h("div",null,parts.slice(1))),prog,msg,list,hintBox("Cari: siapa pengirimnya, apa hadiahnya, tautannya, batas waktunya, dan apa yang diminta."));
+};
+R.pledge=(c,x)=>{
+  const PL=["Saring sebelum sharing: aku cek kebenaran kabar sebelum membagikannya.","Aku berkata sopan dan tidak menyakiti orang lain di internet.","Aku minta izin sebelum memposting foto atau video orang lain.","Aku menjaga kata sandi dan kode OTP, tidak memberikannya kepada siapa pun.","Aku menyebutkan sumber dan tidak mengaku karya orang lain sebagai milikku.","Aku mengatur waktu layar supaya belajar, bermain, dan tidur tetap seimbang.","Aku melapor kepada guru atau orang tua jika menemui perundungan atau pesan aneh.","Aku memakai internet untuk hal baik: belajar, berkarya, dan membantu sesama."];
+  const picked=new Set(); const out=h("div",{"aria-live":"polite"});
+  const cnt=h("p",{class:"prog"},"Terpilih: 0 (pilih 3 sampai 5)");
+  const mk=h("button",{class:"btn mint",type:"button",disabled:true,onclick:()=>{
+    const items=[...picked].sort().map(i=>PL[i]);
+    out.replaceChildren(h("div",{class:"cert"},h("h3",null,"📜 Janji Warga Digital"),h("p",null,"Aku, "+(S.name||"Teman Piko")+", berjanji:"),h("ol",{style:"text-align:left"},items.map(t=>h("li",null,t))),h("p",{class:"muted"},"Dengan jujur dan penuh tanggung jawab."),h("button",{class:"btn ghost sm noprint",type:"button",onclick:()=>{try{navigator.clipboard.writeText("Janji Warga Digital "+(S.name||"")+"\n"+items.map((t,i)=>(i+1)+". "+t).join("\n"));toast("Janji disalin 📋");}catch(e){toast("Salin tidak tersedia");}}},"📋 Salin janji")));
+    gainBadge("P",false); x.done(15);
+  }},"✍️ Buat Janjiku");
+  const btns=PL.map((t,i)=>h("button",{class:"opt",type:"button","aria-pressed":"false",onclick:ev=>{
+    const b=ev.currentTarget; if(picked.has(i)){picked.delete(i);b.setAttribute("aria-pressed","false");b.classList.remove("right");} else { if(picked.size>=5){toast("Maksimal 5 janji ya!");return;} picked.add(i);b.setAttribute("aria-pressed","true");b.classList.add("right"); }
+    cnt.textContent="Terpilih: "+picked.size+" (pilih 3 sampai 5)"; mk.disabled=picked.size<3;
+  }},h("span",{class:"ol","aria-hidden":"true"},i+1),h("span",null,t)));
+  return h("div",null,h("p",null,"Janji mana yang paling penting bagimu? Pilih 3 sampai 5 janji, lalu buat kartu janjimu."),h("div",{class:"opts"},btns),cnt,mk,out,collab("Bacakan janjimu kepada teman sebangku dan ceritakan alasanmu memilihnya.","pledge"));
+};
+R.sum=(c,x,st)=>{
+  const wrap=h("div"); const cid="sum-"+c.id;
+  wrap.append(h("div",{class:"mm"},h("div",{class:"mm-c"},c.center),h("div",{class:"mm-b"},c.branches.map(b=>h("div",null,b)))));
+  wrap.append(h("div",{class:"muted",style:"font-weight:800"},"Kata kunci:"),h("div",{class:"kw"},c.kw.map(k=>h("span",{class:"chip"},k))));
+  wrap.append(h("h3",null,"Salah kaprah yang perlu diluruskan"),h("p",{class:"muted"},"Tekan kartu untuk melihat yang benar."));
+  c.myth.forEach(m=>{const b=h("button",{class:"myth",type:"button",onclick:()=>{b.classList.add("open");b.replaceChildren(h("div",null,"❌ "+m[0]),h("div",{style:"margin-top:4px;font-weight:700"},"✅ "+m[1]));}},"❌ "+m[0]+" (tekan untuk meluruskan)");wrap.append(b);});
+  if(S.jalur==="penjelajah"&&c.bonus){ wrap.append(h("h3",null,"🚀 Misi Bonus (Jalur Penjelajah)"),choiceBlock(c.bonus,{onDone:f=>award(f?10:5,"bonus-"+c.id)})); }
+  x.done(0); return wrap;
+};
+
+/* ============ screens ============ */
+function setView(v,arg){CUR={view:v,arg};render();window.scrollTo(0,0);}
+function render(){
+  const app=$("#app"); app.replaceChildren(); app.style.removeProperty("--st");
+  ({welcome:rWelcome,guide:rGuide,map:rMap,station:rStation,final:rFinal,result:rResult,reflect:rReflect,end:rEnd}[CUR.view]||rWelcome)(app);
+  refreshBar();
+}
+
+function rWelcome(app){
+  const cap=h("div",{class:"cap",role:"status","aria-live":"polite"},"Tekan tombol untuk melihat Piko bekerja!");
+  const run=h("div",{class:"runner"},piko());
+  let busy=false;
+  const go=h("button",{class:"btn",type:"button",onclick:()=>{
+    if(busy)return; busy=true; go.disabled=true; cap.textContent="Piko berangkat membawa permintaan: “Tampilkan halaman web!”";
+    run.style.left="calc(100% - 136px)";
+    setTimeout(()=>{ run.classList.add("back"); cap.textContent="Server menemukan halamannya. Piko pulang membawa datanya!"; run.style.left="76px"; },1700);
+    setTimeout(()=>{ run.classList.remove("back"); cap.textContent="Halaman tampil di layarmu. Begitulah internet bekerja!"; busy=false; go.disabled=false; },3500);
+  }},"📨 Kirim Piko!");
+  const demo=h("div",{class:"card"},h("div",{class:"track"},h("span",{class:"end l","aria-hidden":"true"},"💻"),h("span",{class:"cable","aria-hidden":"true"}),h("span",{class:"end r","aria-hidden":"true"},"🗄️"),run),cap,go);
+  const nameIn=h("input",{type:"text",id:"nm",maxlength:"24",autocomplete:"off",placeholder:"Tulis nama panggilanmu",value:S.name});
+  const J=[["pemandu","Jalur Pemandu","Piko menemani dengan petunjuk langkah demi langkah."],["petualang","Jalur Petualang","Petunjuk muncul kalau kamu memintanya."],["penjelajah","Jalur Penjelajah","Ada Misi Bonus dan tantangan ide sendiri."]];
+  const jbs=J.map(j=>h("button",{class:"jb",type:"button","aria-pressed":String(S.jalur===j[0]),onclick:()=>{S.jalur=j[0];save();jbs.forEach((b,i)=>b.setAttribute("aria-pressed",String(J[i][0]===S.jalur)));}},h("b",null,j[1]),h("small",null,j[2])));
+  const start=h("button",{class:"btn",type:"button",onclick:()=>{S.name=nameIn.value.trim().replace(/\s+/g," ")||"Teman Piko";save();setView(S.sd.__guide?"map":"guide");}},"🚀 Mulai Petualangan");
+  const left=h("div",null,h("span",{class:"chip kicker"},"Koding dan Kecerdasan Artifisial, Kelas 6"),
+    h("h1",null,h("span",null,"Petualangan"),h("span",null,"Kurir Data")),
+    h("p",null,"Bab 2: Internet dan Konten Digital. Ikuti Piko, paket data kecil yang berani, menyusuri internet, membuat konten, dan menjaga diri dari penipuan online."),
+    h("p",{class:"muted"},"🙏 Mulailah belajar dengan berdoa menurut agama dan kepercayaanmu."),
+    h("label",{class:"lb",for:"nm"},"Siapa namamu?"),nameIn,h("div",{class:"lb"},"Pilih jalur belajarmu"),h("div",{class:"jalur"},jbs),
+    h("div",{class:"row"},start,h("button",{class:"btn ghost",type:"button",onclick:()=>speak("Halo! Aku Piko. Ayo ikut petualangan menyusuri internet bersamaku!")},"🔊 Dengarkan")));
+  if(S.xp>0||Object.keys(S.done).length){
+    left.append(h("div",{class:"hintbox"},"Ada progres tersimpan di perangkat ini. ",h("button",{class:"btn sm",type:"button",onclick:()=>setView("map")},"Lanjutkan sebagai "+firstName())," ",h("button",{class:"btn ghost sm",type:"button",onclick:()=>{if(confirm("Mulai baru? Progres di perangkat ini akan dihapus.")){resetAll();setView("welcome");}}},"Mulai baru")));
+  }
+  app.append(h("section",{class:"hero"},left,demo));
+}
+
+function rGuide(app){
+  const ok={a:false,b:false,c:false}; const nxt=h("button",{class:"btn",type:"button",disabled:true,onclick:()=>{S.sd.__guide=1;save();setView("map");}},"Ke Peta Petualangan ➜");
+  const chk=()=>{nxt.disabled=!(ok.a&&ok.b&&ok.c);};
+  const t1=h("button",{class:"btn",type:"button",onclick:ev=>{ok.a=true;ev.currentTarget.textContent="⭐ Berhasil!";ev.currentTarget.classList.add("mint");chk();}},"Tekan aku!");
+  let sel=false; const apple=h("button",{class:"cs",type:"button",draggable:"true",style:"font-size:1.6rem",ondragstart:e=>e.dataTransfer.setData("text/plain","apel"),onclick:()=>{sel=true;apple.classList.add("sel");}},"🍎");
+  const basket=h("div",{class:"basket",tabindex:"0",role:"button","aria-label":"Keranjang",ondragover:e=>{e.preventDefault();basket.classList.add("over");},ondragleave:()=>basket.classList.remove("over"),ondrop:e=>{e.preventDefault();drop();},onclick:()=>{if(sel)drop();},onkeydown:e=>{if((e.key==="Enter"||e.key===" ")&&sel){e.preventDefault();drop();}}},"🧺");
+  function drop(){basket.classList.remove("over");basket.textContent="🧺🍎 Berhasil!";apple.remove();ok.b=true;chk();}
+  const t3=choiceBlock(Q("Mana yang merupakan hewan?",[["Meja",0,"Meja adalah benda."],["Kucing",1,"Betul! Kucing adalah hewan."],["Awan",0,"Awan ada di langit, bukan hewan."]]),{onDone:()=>{ok.c=true;chk();}});
+  const tps=[["🌐","Memahami cara internet bekerja dan istilahnya"],["🖼️","Mengenali konten digital dan jenis-jenisnya"],["🎨","Membuat konten digital sederhana yang menarik dan bermanfaat"],["📤","Membagikan konten digital secara aman dan bertanggung jawab"],["🕵️","Mengenali data pribadi yang harus dijaga dari phishing"],["🤝","Bersikap bijak dan bertanggung jawab di internet"]];
+  app.append(h("div",{class:"bubble"},piko(),h("div",{class:"say"},"Halo, "+firstName()+"! Sebelum berangkat, kita latihan dulu tiga gerakan: tekan, pindahkan, dan pilih.")),
+   h("h2",null,"Latihan Tiga Gerakan"),
+   h("div",{class:"drill"},h("div",{class:"card"},h("h3",null,"1. Tekan"),t1),h("div",{class:"card"},h("h3",null,"2. Pindahkan"),h("p",{class:"muted"},"Tekan apel lalu tekan keranjang, atau seret."),h("div",null,apple),basket),h("div",{class:"card"},h("h3",null,"3. Pilih"),t3)),
+   h("h2",null,"Misi Belajarmu"),h("p",null,"Setelah petualangan ini, kamu akan mampu:"),
+   h("div",{class:"tp-grid"},tps.map((t,i)=>h("div",{class:"tp"},h("div",{class:"ic","aria-hidden":"true"},t[0]),h("div",null,h("b",null,"Misi "+(i+1)),h("div",null,t[1]))))),
+   h("div",{class:"hintbox"},"Kamu mengumpulkan ⭐ XP, naik level 🚀, dan meraih lencana 🏅. Ada Kamus Piko 📖 di bagian atas kalau bertemu kata sulit."),
+   h("div",{class:"nav"},h("button",{class:"btn ghost",type:"button",onclick:()=>setView("welcome")},"⬅ Kembali"),nxt));
+}
+
+const TPS=[
+ ["Memahami cara internet bekerja dan istilahnya",()=>S.done.A],["Mengenali konsep dan jenis konten digital",()=>S.done.B],
+ ["Membuat konten digital sederhana yang menarik dan bermanfaat",()=>S.sd["C.poster"]],["Membagikan konten digital secara aman dan bertanggung jawab",()=>S.sd["C.share"]],
+ ["Mengidentifikasi data pribadi yang harus dijaga dari phishing",()=>S.sd["D.sort"]&&S.sd["D.detect"]],["Menunjukkan sikap bijak dan bertanggung jawab di internet",()=>S.done.E]];
+const allDone=()=>STATIONS.every(s=>S.done[s.id]);
+function firstOpen(st){const i=st.steps.findIndex(s=>!S.sd[s.id]);return i<0?st.steps.length-1:i;}
+
+function rMap(app){
+  const l=lvlOf(S.xp),nx=LEVELS.find(v=>v.xp>S.xp),pct=nx?Math.round((S.xp-l.xp)/(nx.xp-l.xp)*100):100;
+  const next=STATIONS.find(s=>!S.done[s.id]);
+  const list=h("ul",{class:"cable-list"},STATIONS.map((st,i)=>{
+    const dn=st.steps.filter(s=>S.sd[s.id]).length;
+    return h("li",{class:"stn"+(S.done[st.id]?" done":"")},
+      next&&next.id===st.id&&h("span",{class:"piko-here"},piko()),
+      h("span",{class:"node","aria-hidden":"true"},S.done[st.id]?"✓":String(i+1)),
+      h("button",{class:"stbtn",type:"button",style:"--st-bg:var(--"+st.col+"-bg)",onclick:()=>setView("station",{id:st.id,step:firstOpen(st)})},
+        h("span",{class:"big","aria-hidden":"true"},st.icon),
+        h("span",null,h("small",null,"Stasiun "+st.id+" ("+st.tp+")"),h("h3",null,st.title),h("small",null,st.sub),h("div",{class:"dots","aria-label":dn+" dari "+st.steps.length+" langkah selesai"},st.steps.map(s=>h("i",{class:S.sd[s.id]?"on":""}))))));
+  }));
+  const finalOk=allDone()||S.unlock;
+  const fin=h("li",{class:"stn"+(S.quiz?" done":"")},h("span",{class:"node","aria-hidden":"true"},"★"),
+    h("button",{class:"stbtn",type:"button",disabled:!finalOk,style:"--st-bg:var(--c-bg)"+(finalOk?"":";opacity:.55"),onclick:()=>setView("final",{i:0})},
+      h("span",{class:"big","aria-hidden":"true"},"🏆"),h("span",null,h("small",null,"Misi Akhir"),h("h3",null,"Kuis Petualangan"),h("small",null,finalOk?(S.quiz?"Skor terakhirmu: "+S.quiz.score:"10 soal, termasuk soal tantangan HOTS"):"Selesaikan semua stasiun untuk membuka")))); 
+  list.append(fin);
+  const side=h("div",{style:"display:grid;gap:16px"},
+    h("div",{class:"card"},h("h3",null,"Halo, "+firstName()+"!"),h("p",null,"Level "+l.n+": "+l.name),h("div",{class:"lvlbar",role:"progressbar","aria-valuenow":pct,"aria-valuemin":"0","aria-valuemax":"100"},h("i",{style:"width:"+pct+"%"})),h("p",{class:"muted"},nx?(nx.xp-S.xp)+" XP lagi menuju “"+nx.name+"”":"Level tertinggi tercapai!")),
+    h("div",{class:"card"},h("h3",null,"Misi Belajar"),h("ul",{class:"tp-list"},TPS.map((t,i)=>h("li",null,h("b",null,t[1]()?"✅":"⬜"),h("span",null,t[0]))))),
+    h("div",{class:"card"},h("h3",null,"Lencanaku"),h("div",{class:"badges"},Object.keys(BADGES).map(k=>h("div",{class:"bdg"+(S.badges.includes(k)?"":" lock")},h("div",{class:"bi","aria-hidden":"true"},BADGES[k].i),BADGES[k].n)))));
+  app.append(h("h2",null,"🗺️ Peta Petualangan"),h("p",null,"Kunjungi stasiun secara berurutan. Piko menunggu di stasiun berikutnya! Rencana waktu: Pertemuan 1 untuk Stasiun A sampai C, Pertemuan 2 untuk Stasiun D, E, dan Misi Akhir."),h("div",{class:"mapgrid"},h("div",null,list),side));
+}
+
+function rStation(app){
+  const st=STATIONS.find(s=>s.id===CUR.arg.id); let si=CUR.arg.step||0;
+  app.style.setProperty("--st","var(--"+st.col+")"); 
+  const onst=st.col==="c"?"#1B2160":"#fff"; app.style.setProperty("--on-st",onst);
+  app.style.setProperty("--st-bg","var(--"+st.col+"-bg)");
+  const head=h("div",{class:"sthead"},h("span",{class:"big","aria-hidden":"true"},st.icon),h("div",null,h("h2",null,"Stasiun "+st.id+": "+st.title),h("div",{class:"dpl"},st.dpl.map(d=>h("span",{class:"chip"},"DPL: "+d)))));
+  const limit=()=>{const f=st.steps.findIndex(s=>!S.sd[s.id]);return f<0?st.steps.length-1:f;};
+  const stepper=h("div",{class:"stepper",role:"navigation","aria-label":"Langkah"});
+  const body=h("div",{class:"card"}); const nav=h("div",{class:"nav"});
+  function draw(){
+    const step=st.steps[si];
+    stepper.replaceChildren(...st.steps.map((s,i)=>h("button",{class:"stp"+(i===si?" cur":"")+(S.sd[s.id]&&i!==si?" done":""),type:"button",disabled:i>limit(),"aria-current":i===si?"step":null,onclick:()=>{si=i;draw();}},(S.sd[s.id]&&i!==si?"✓ ":"")+s.name)));
+    body.replaceChildren();
+    const sayText=step.say||"";
+    body.append(h("div",{class:"bubble"},piko(),h("div",{class:"say"},sayText,h("button",{class:"btn ghost sm noprint",type:"button",style:"margin-left:8px",onclick:()=>speak(sayText+" "+(step.text||step.intro||"")),"aria-label":"Dengarkan"},"🔊"))));
+    const ctx={done:(xp)=>{ if(!S.sd[step.id]){markStep(step.id);} if(xp)award(xp,"x-"+step.id); drawNav(); drawStepperOnly(); }};
+    body.append(R[step.type](step,ctx,st));
+    drawNav();
+  }
+  function drawStepperOnly(){ Array.from(stepper.children).forEach((b,i)=>{ b.disabled=i>limit(); if(S.sd[st.steps[i].id]&&i!==si){b.classList.add("done"); if(!b.textContent.startsWith("✓"))b.textContent="✓ "+st.steps[i].name;} }); }
+  function drawNav(){
+    const step=st.steps[si],last=si===st.steps.length-1,ready=!!S.sd[step.id];
+    nav.replaceChildren(
+      h("button",{class:"btn ghost",type:"button",onclick:()=>{ if(si>0){si--;draw();window.scrollTo(0,0);} else setView("map"); }},si>0?"⬅ Sebelumnya":"🗺️ Peta"),
+      last?h("button",{class:"btn mint",type:"button",disabled:!ready,onclick:()=>finishStation(st)},S.done[st.id]?"🗺️ Kembali ke Peta":"🏅 Selesai dan ambil lencana"):h("button",{class:"btn",type:"button",disabled:!ready,onclick:()=>{si++;draw();window.scrollTo(0,0);}},"Lanjut ➜"));
+  }
+  draw();
+  app.append(h("button",{class:"btn ghost sm",type:"button",style:"margin-bottom:12px",onclick:()=>setView("map")},"⬅ Peta"),head,stepper,body,nav);
+}
+function finishStation(st){
+  if(S.done[st.id]){setView("map");return;}
+  S.done[st.id]=1; save(); award(20,"st-"+st.id); gainBadge(st.id,true);
+  const dlg=$("#dlgBadge"); const onClose=()=>{dlg.removeEventListener("close",onClose);setView("map");}; dlg.addEventListener("close",onClose);
+}
+
+/* ---- final quiz ---- */
+function rFinal(app){
+  if(!CUR.arg.ans) CUR.arg.ans=[];
+  const i=CUR.arg.i,n=FQ.length;
+  if(i>=n){ finishQuiz(CUR.arg.ans); return; }
+  const it=FQ[i];
+  app.style.setProperty("--st","var(--c)"); app.style.setProperty("--st-bg","var(--c-bg)");
+  const nextBtn=h("button",{class:"btn",type:"button",disabled:true,onclick:()=>{CUR.arg.i=i+1;render();window.scrollTo(0,0);}},i===n-1?"Lihat Hasil 🏁":"Soal berikutnya ➜");
+  const done=(pts,ok,extra)=>{ CUR.arg.ans[i]={pts,ok,tag:it.tag,lv:it.lv}; nextBtn.disabled=false; if(extra) extra(); };
+  let body;
+  if(it.type==="mc"){
+    body=choiceBlock({q:it.q,opts:it.opts.map(o=>({t:o[0],ok:!!o[1],fb:o[2]}))},{once:true,onDone:(first)=>done(first?it.pts:0,first)});
+  } else if(it.type==="fill"){
+    const inp=h("input",{type:"text",id:"fa",autocomplete:"off",placeholder:"Ketik jawabanmu"}); const fb=h("div",{class:"fb",role:"status","aria-live":"polite"});
+    const chk=h("button",{class:"btn",type:"button",onclick:()=>{
+      const v=inp.value.toLowerCase().replace(/[^a-z]/g,""); if(!v){fb.className="fb bad";fb.textContent="Tulis jawabanmu dulu, ya.";return;}
+      const ok=it.ans.some(a=>v.includes(a)); inp.disabled=true; chk.disabled=true; fb.className="fb "+(ok?"good":"bad"); fb.textContent=(ok?"✓ ":"✗ ")+(ok?it.okfb:it.nofb+" Jawaban yang tepat: “"+it.std+"”."); done(ok?it.pts:0,ok);
+    }},"Periksa jawaban");
+    body=h("div",{class:"qblock"},h("div",{class:"qt"},it.q),h("label",{class:"sr",for:"fa"},"Jawaban"),inp,h("div",{style:"margin-top:10px"},chk),fb);
+  } else {
+    const ta=h("textarea",{id:"ea",rows:"5",maxlength:"500",placeholder:"Contoh: Kami akan mengecek kabar sebelum membagikannya, ..."}); const fb=h("div",{role:"status","aria-live":"polite"});
+    const chk=h("button",{class:"btn",type:"button",onclick:()=>{
+      const v=ta.value.trim(); if(v.length<20){fb.replaceChildren(h("div",{class:"fb bad"},"Tulis minimal 2 kalimat (sekitar 20 huruf lebih), ya."));return;}
+      let pts=0; const rows=ESSAY_RUBRIC.map(r=>{const m=r.re.test(v); if(m)pts+=5; return h("li",{class:m?"":"muted"},(m?"✓ ":"○ ")+r.t+(m?"":" — "+r.tip));});
+      ta.disabled=true; chk.disabled=true; fb.replaceChildren(h("div",{class:"fb "+(pts>=15?"good":"bad")},"Skor otomatis: "+pts+" dari 20"),h("ul",{class:"chk",style:"margin-top:8px"},rows),h("p",{class:"muted"},"Skor ini dihitung otomatis dari kata kunci. Gurumu dapat menilai ulang dengan rubrik.")); done(pts,pts>=15);
+    }},"Periksa jawaban");
+    body=h("div",{class:"qblock"},h("div",{class:"qt"},it.q),h("p",{class:"muted"},"Petunjuk: ingat tiga B (Benar, Baik, Bermanfaat), izin, dan data pribadi."),h("label",{class:"sr",for:"ea"},"Janji warga digital"),ta,h("div",{style:"margin-top:10px"},chk),fb);
+  }
+  const hots=["C4","C5","C6"].includes(it.lv);
+  app.append(h("div",{class:"bubble"},piko(),h("div",{class:"say"},hots?"Ini soal tantangan! Pikirkan baik-baik, ya.":"Jawab dengan teliti. Kamu pasti bisa!")),
+    h("div",{class:"card"},h("div",{class:"row",style:"justify-content:space-between"},h("span",{class:"chip"},"Soal "+(i+1)+" dari "+n),h("span",{class:"chip",style:hots?"background:var(--sun);color:var(--on-sun)":""},(hots?"Tantangan HOTS ":"Level ")+it.lv+", bobot "+it.pts)),
+      h("div",{class:"bar",style:"margin:10px 0 16px"},h("i",{style:"width:"+(i/n*100)+"%"})),body),
+    h("div",{class:"nav"},h("button",{class:"btn ghost",type:"button",onclick:()=>setView("map")},"🗺️ Keluar ke Peta"),nextBtn));
+}
+function finishQuiz(ans){
+  const score=ans.reduce((a,x)=>a+(x?x.pts:0),0); const wrongTags=[...new Set(ans.filter(x=>x&&!x.ok).flatMap(x=>x.tag))].sort();
+  const hotsPts=ans.filter(x=>x&&["C4","C5","C6"].includes(x.lv)).reduce((a,x)=>a+x.pts,0);
+  S.quiz={score,wrongTags,hotsPts}; save();
+  award(Math.round(score*0.6),"quiz"); if(score>=75)gainBadge("Q",false);
+  try{const b=LS.get(BOARD)||[]; b.push({name:S.name||"Teman Piko",score,xp:S.xp,d:Date.now()}); b.sort((p,q)=>q.score-p.score||q.xp-p.xp); LS.set(BOARD,b.slice(0,8));}catch(e){}
+  setView("result");
+}
+function rResult(app){
+  const q=S.quiz||{score:0,wrongTags:[],hotsPts:0}; const pass=q.score>=75;
+  const NAMES={A:"Mengenal Internet",B:"Mengenal Konten Digital",C:"Membuat dan Membagikan Konten",D:"Melindungi Data dari Phishing",E:"Bijak di Internet"};
+  const board=(LS.get(BOARD)||[]);
+  if(pass) setTimeout(confetti,300);
+  const rem=pass?h("div",{class:"card flat",style:"background:var(--mint-bg)"},h("h3",null,"🌟 Jalur Pengayaan"),h("p",null,"Kamu sudah tuntas! Tantangan untukmu: rancang kampanye mini “Aman di Internet” untuk adik kelas. Tentukan pesan utamanya, jenis konten yang dipilih (teks, gambar, audio, atau video), dan cara membagikannya dengan aman. Presentasikan kepada temanmu.")):
+    h("div",{class:"card flat",style:"background:var(--c-bg)"},h("h3",null,"💪 Jalur Penguatan (Remedial)"),h("p",null,"Skor belum mencapai 75, tidak apa-apa! Ulangi stasiun berikut bersama Piko, lalu coba Misi Akhir lagi:"),h("div",{class:"row"},(q.wrongTags.length?q.wrongTags:["A"]).map(t=>h("button",{class:"btn sm",type:"button",onclick:()=>setView("station",{id:t,step:0})},"Ulangi Stasiun "+t+": "+NAMES[t]))));
+  app.append(h("h2",null,"🏁 Hasil Misi Akhir"),
+   h("div",{class:"mapgrid"},
+    h("div",{style:"display:grid;gap:16px"},
+     h("div",{class:"card",style:"text-align:center"},h("div",{class:"ring",style:"--p:"+q.score},h("div",null,String(q.score))),h("h3",{style:"margin-top:12px"},pass?"Tuntas! Hebat, "+firstName()+"!":"Belum tuntas, ayo semangat!"),h("p",{class:"muted"},"Kriteria ketuntasan: skor 75 ke atas. Skor soal tantangan HOTS: "+q.hotsPts+" dari 44."),
+       h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn ghost",type:"button",onclick:()=>setView("final",{i:0})},"🔁 Coba lagi"),h("button",{class:"btn",type:"button",onclick:()=>setView("reflect")},"Lanjut ke Refleksi ➜"))),rem),
+    h("div",{class:"card"},h("h3",null,"🏅 Papan Skor Perangkat Ini"),board.length?h("table",{class:"board"},h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Nama"),h("th",null,"Skor"))),h("tbody",null,board.slice(0,5).map((b,i)=>h("tr",null,h("td",null,String(i+1)),h("td",null,b.name),h("td",null,String(b.score)))))):h("p",{class:"muted"},"Belum ada skor."),h("p",{class:"muted",style:"font-size:.85rem"},"Papan skor tersimpan hanya di perangkat ini dan tidak dikirim ke mana pun."))));
+}
+
+function rReflect(app){
+  const R0=S.refl||{r:{},t:{}}; const qs=[["Aku paham cara internet bekerja.","a"],["Aku bisa menyebutkan jenis-jenis konten digital.","b"],["Aku bisa membuat dan membagikan konten dengan aman.","c"],["Aku bisa mengenali pesan phishing.","d"],["Aku mau bersikap bijak di internet.","e"]];
+  const EM=[["😕","Belum"],["🙂","Sedikit"],["😀","Paham"],["🤩","Sangat paham"]];
+  const rows=qs.map(([t,k])=>{ const bs=EM.map((e,i)=>h("button",{type:"button","aria-pressed":String(R0.r[k]===i),"aria-label":e[1],title:e[1],onclick:()=>{R0.r[k]=i;bs.forEach((b,j)=>b.setAttribute("aria-pressed",String(j===i)));}},e[0])); return h("div",{style:"margin-bottom:14px"},h("div",{style:"font-weight:800;margin-bottom:6px"},t),h("div",{class:"scale"},bs)); });
+  const P=[["Hal paling menarik yang kupelajari hari ini adalah …","t1"],["Hal yang masih membingungkan bagiku adalah …","t2"],["Minggu ini aku akan menerapkan … untuk menjaga diriku di internet.","t3"]];
+  const tas=P.map(([l,k])=>h("div",null,h("label",{class:"lb",for:"t-"+k},l),h("textarea",{id:"t-"+k,rows:"2",maxlength:"240",oninput:e=>{R0.t[k]=e.target.value;}},R0.t[k]||"")));
+  app.append(h("div",{class:"bubble"},piko(),h("div",{class:"say"},"Saatnya merenung, "+firstName()+". Jujur pada diri sendiri itu keren!")),h("h2",null,"📔 Refleksi dan Jurnal Belajar"),
+    h("div",{class:"card"},h("h3",null,"Seberapa paham kamu?"),rows,h("h3",null,"Jurnal belajarku"),tas,
+      h("div",{class:"nav"},h("button",{class:"btn ghost",type:"button",onclick:()=>setView("result")},"⬅ Hasil"),h("button",{class:"btn mint",type:"button",onclick:()=>{S.refl=R0;save();award(10,"refl");gainBadge("R",false);setView("end");}},"💾 Simpan refleksi"))));
+}
+
+function rEnd(app){
+  const l=lvlOf(S.xp); confetti();
+  const jr=S.refl&&S.refl.t?Object.values(S.refl.t).filter(Boolean).join("\n"):"";
+  app.append(h("div",{class:"cert"},h("div",{style:"font-size:3.2rem","aria-hidden":"true"},"🏆"),h("h1",{style:"font-size:clamp(1.8rem,5vw,2.8rem)"},"Sertifikat Petualang Digital"),h("p",null,"diberikan kepada"),h("h2",null,S.name||"Teman Piko"),
+    h("p",null,"yang telah menyelesaikan Bab 2: Internet dan Konten Digital"),h("p",null,h("b",null,"Level "+l.n+": "+l.name),", ",S.xp+" XP"+(S.quiz?", skor Misi Akhir "+S.quiz.score:"")),
+    h("div",{class:"badges",style:"max-width:520px;margin:12px auto"},Object.keys(BADGES).map(k=>h("div",{class:"bdg"+(S.badges.includes(k)?"":" lock")},h("div",{class:"bi","aria-hidden":"true"},BADGES[k].i),BADGES[k].n))),
+    h("p",{class:"muted"},"Terima kasih telah berpetualang bersama Piko. Gunakan internet dengan bijak, ya!"),
+    h("div",{class:"row noprint",style:"justify-content:center"},h("button",{class:"btn",type:"button",onclick:()=>window.print()},"🖨️ Cetak"),h("button",{class:"btn ghost",type:"button",onclick:()=>setView("map")},"🗺️ Ke Peta"),h("button",{class:"btn ghost",type:"button",onclick:()=>{try{navigator.clipboard.writeText("Jurnal belajar "+(S.name||"")+"\n"+jr);toast("Jurnal disalin 📋");}catch(e){toast("Salin tidak tersedia");}}},"📋 Salin jurnal"))));
+}
+
+function resetAll(){ Object.assign(S,{name:"",jalur:"petualang",xp:0,aw:{},sd:{},done:{},badges:[],quiz:null,refl:null,unlock:false}); LS.del(KEY); refreshBar(); }
+
+/* ============ dialogs ============ */
+function drawDict(q){
+  q=(q||"").toLowerCase(); const l=$("#dictList"); l.replaceChildren(...GLOS.filter(g=>!q||g[0].toLowerCase().includes(q)||g[1].toLowerCase().includes(q)).map(g=>h("div",null,h("b",null,g[0]+": "),g[1])));
+  if(!l.children.length) l.append(h("p",{class:"muted"},"Istilah tidak ditemukan. Coba kata lain."));
+}
+function teacherHTML(){
+  return {
+  "Ringkasan":`
+<h3>Identitas media</h3>
+<div class="tw"><table class="t"><tbody>
+<tr><th>Judul</th><td>Petualangan Kurir Data: Internet dan Konten Digital</td></tr>
+<tr><th>Jenjang, mapel, kelas/fase</th><td>SD, Koding dan Kecerdasan Artifisial, Kelas 6 / Fase C</td></tr>
+<tr><th>Alokasi waktu</th><td>2 × 35 menit (lihat tab Alur)</td></tr>
+<tr><th>Target pengguna</th><td>Siswa (berpasangan atau mandiri) dengan pendampingan guru</td></tr>
+<tr><th>Model pembelajaran</th><td>Contextual Teaching and Learning (CTL)</td></tr>
+<tr><th>Platform</th><td>Satu berkas HTML5 interaktif. Buka di Chrome, Edge, atau Firefox. Tanpa instalasi dan tanpa akun.</td></tr>
+<tr><th>Prasyarat teknis</th><td>1 perangkat untuk 1–2 siswa, layar minimal 7 inci, browser terbaru. Internet hanya dibutuhkan untuk memuat font (ada font cadangan). Progres tersimpan di perangkat dan tidak dikirim ke server.</td></tr>
+</tbody></table></div>
+<h3>Penerapan CTL dalam alur media</h3>
+<div class="tw"><table class="t"><thead><tr><th>Komponen CTL</th><th>Wujud dalam media</th></tr></thead><tbody>
+<tr><td>Konstruktivisme</td><td>Cerita pemantik tiap stasiun yang menghubungkan pengalaman siswa (menonton video, grup kelas, hadiah palsu) dengan konsep baru</td></tr>
+<tr><td>Inkuiri</td><td>Menjelajah kartu hotspot dan menemukan 5 tanda bahaya phishing sendiri</td></tr>
+<tr><td>Bertanya</td><td>Pertanyaan tebakan, petunjuk bertingkat, dan umpan balik spesifik</td></tr>
+<tr><td>Masyarakat belajar</td><td>Tantangan Kolaborasi: tukar poster dan bacakan janji kepada teman sebangku</td></tr>
+<tr><td>Pemodelan</td><td>Piko memodelkan perjalanan data dan tiga langkah perisai (Berhenti, Periksa, Tanya)</td></tr>
+<tr><td>Refleksi</td><td>Rangkuman salah kaprah, jurnal belajar, dan skala pemahaman</td></tr>
+<tr><td>Penilaian autentik</td><td>Produk poster, Janji Warga Digital, dan skenario keputusan nyata</td></tr>
+</tbody></table></div>
+<p class="muted">[ASUMSI: kriteria ketuntasan 75; satu perangkat untuk dua siswa; guru memiliki proyektor atau layar bersama untuk pembukaan.]</p>
+<h3>Alat bantu guru</h3>
+<div class="row"><button class="btn sm" type="button" id="tUnlock">🔓 Buka Misi Akhir (mode guru)</button><button class="btn ghost sm" type="button" id="tBoard">🗑️ Hapus papan skor</button><button class="btn ghost sm" type="button" id="tReset">♻️ Reset progres perangkat ini</button></div>`,
+  "Analisis & DPL":`
+<h3>Tujuan pembelajaran, indikator, dan level kognitif</h3>
+<div class="tw"><table class="t"><thead><tr><th>TP</th><th>Indikator terukur</th><th>Bloom</th><th>Stasiun</th></tr></thead><tbody>
+<tr><td>1</td><td>Menyebutkan 5 bagian perjalanan data; menjelaskan fungsi router, ISP, server; menentukan penyebab gangguan koneksi sederhana</td><td>C1, C2, C3</td><td>A</td></tr>
+<tr><td>2</td><td>Menjelaskan arti konten digital; mengelompokkan contoh ke jenis konten; membedakan benda cetak dan file digital</td><td>C2, C3, C4</td><td>B</td></tr>
+<tr><td>3</td><td>Merencanakan pesan dan tampilan; membuat poster dengan judul, pesan, gambar; memeriksa hasil dengan daftar periksa</td><td>C5, C6</td><td>C</td></tr>
+<tr><td>4</td><td>Menentukan langkah aman sebelum membagikan; mencantumkan sumber dan meminta izin; mengevaluasi keputusan membagikan</td><td>C3, C5</td><td>C</td></tr>
+<tr><td>5</td><td>Memilah data pribadi rahasia dan non-rahasia; menemukan ciri phishing; menentukan tindakan Berhenti, Periksa, Tanya</td><td>C2, C4, C5</td><td>D</td></tr>
+<tr><td>6</td><td>Memilih tindakan bijak pada situasi hoaks, perundungan, jejak digital, waktu layar; menyusun Janji Warga Digital</td><td>C5, C6</td><td>E</td></tr>
+</tbody></table></div>
+<h3>Kompetensi</h3>
+<ul><li><b>Pengetahuan:</b> konsep internet, jenis konten digital, data pribadi, phishing, etika digital.</li><li><b>Keterampilan:</b> membuat poster digital, menganalisis pesan, mengambil keputusan di dunia maya.</li><li><b>Sikap:</b> jujur, hati-hati, santun, peduli, bertanggung jawab.</li></ul>
+<p><b>Prasyarat:</b> dapat mengoperasikan perangkat sederhana, membaca lancar, mengenal istilah komputer dasar.</p>
+<h3>8 Dimensi Profil Lulusan (Deep Learning)</h3>
+<div class="tw"><table class="t"><thead><tr><th>Dimensi</th><th>Aktivitas dalam media</th><th>Indikator</th></tr></thead><tbody>
+<tr><td>Keimanan dan ketakwaan</td><td>Doa pembuka; janji jujur; pilihan “internet untuk hal baik”</td><td>Berdoa sebelum belajar; memilih kejujuran dan tidak menyebar hoaks</td></tr>
+<tr><td>Kewargaan</td><td>Skenario perundungan siber; Janji Warga Digital</td><td>Menolak ikut menyakiti, melapor, menghargai orang lain</td></tr>
+<tr><td>Penalaran kritis</td><td>Detektif phishing; cek sumber hoaks; soal HOTS</td><td>Menemukan ≥ 4 dari 5 tanda bahaya; menjelaskan alasan keputusan</td></tr>
+<tr><td>Kreativitas</td><td>Pembuat poster; ide sendiri (Jalur Penjelajah)</td><td>Poster orisinal dengan pesan bermanfaat</td></tr>
+<tr><td>Kolaborasi</td><td>Tantangan Kolaborasi: tukar poster, bacakan janji</td><td>Memberi 1 pujian dan 1 saran kepada teman</td></tr>
+<tr><td>Kemandirian</td><td>Memilih jalur, petunjuk bertingkat, jurnal</td><td>Menyelesaikan stasiun dan memanfaatkan petunjuk secara mandiri</td></tr>
+<tr><td>Kesehatan</td><td>Skenario waktu layar jam 10 malam</td><td>Mengatur jadwal waktu layar dan istirahat</td></tr>
+<tr><td>Komunikasi</td><td>Pesan poster; esai janji; refleksi tertulis</td><td>Menyampaikan pesan singkat dan jelas, lisan dan tulisan</td></tr>
+</tbody></table></div>
+<p><b>Nilai karakter:</b> jujur, teliti, santun, peduli, tanggung jawab, disiplin.</p>`,
+  "Alur 2×35":`
+<h3>Rencana waktu</h3>
+<div class="tw"><table class="t"><thead><tr><th>Waktu</th><th>Kegiatan</th><th>Peran guru</th></tr></thead><tbody>
+<tr><th colspan="3">Pertemuan 1 (35 menit)</th></tr>
+<tr><td>4′</td><td>Doa, beranda (demo Piko), pilih jalur, latihan tiga gerakan</td><td>Menampilkan beranda di layar bersama; membagi pasangan</td></tr>
+<tr><td>11′</td><td>Stasiun A: Mengenal Internet</td><td>Bertanya: “Apa yang terjadi di antara tablet dan server?”</td></tr>
+<tr><td>9′</td><td>Stasiun B: Konten Digital</td><td>Meminta siswa menyebut contoh konten di sekitar mereka</td></tr>
+<tr><td>11′</td><td>Stasiun C: Membuat dan Membagikan</td><td>Berkeliling; memandu tukar karya antarteman</td></tr>
+<tr><th colspan="3">Pertemuan 2 (35 menit)</th></tr>
+<tr><td>11′</td><td>Stasiun D: Phishing</td><td>Menanyakan pengalaman menerima pesan aneh (tanpa menyebut nama)</td></tr>
+<tr><td>9′</td><td>Stasiun E: Bijak di Internet</td><td>Memfasilitasi diskusi singkat tentang tiga B</td></tr>
+<tr><td>9′</td><td>Misi Akhir (10 soal)</td><td>Mengamati; mencatat siswa yang membutuhkan pendampingan</td></tr>
+<tr><td>6′</td><td>Refleksi, penutup, penghargaan</td><td>Menutup dengan doa; menyampaikan tindak lanjut</td></tr>
+</tbody></table></div>
+<h3>Pertanyaan pemantik</h3>
+<ul><li><b>A:</b> Bagaimana video yang jauh bisa sampai ke tabletmu? Apa yang terjadi kalau router mati?</li><li><b>B:</b> Mana yang lebih mudah dibagikan, foto cetak atau file foto? Mengapa?</li><li><b>C:</b> Apa yang membuat sebuah poster mau dibaca orang? Apa yang tidak boleh ada di dalamnya?</li><li><b>D:</b> Pernahkah kamu atau keluargamu menerima pesan hadiah palsu? Apa yang dilakukan?</li><li><b>E:</b> Apa yang kamu rasakan jika fotomu dibagikan tanpa izin?</li></ul>
+<h3>Tips teknis</h3>
+<ul><li>Beri siswa nama panggilan saja; jangan nama lengkap.</li><li>Bila perangkat terbatas, bagi kelas dalam dua gelombang atau kerja berpasangan.</li><li>Tombol 🔊 membacakan teks (bergantung pada dukungan suara Bahasa Indonesia di perangkat).</li><li>Tombol A+ memperbesar huruf. Warna dan kontras sudah disesuaikan, dan mode gelap otomatis mengikuti perangkat.</li><li>Papan skor hanya tersimpan di perangkat. Hapus lewat Panel Guru sebelum perangkat dipakai kelas lain.</li></ul>
+<h3>Cara menilai</h3><p>Pantau lencana dan skor Misi Akhir, periksa poster dan janji siswa dengan rubrik pada tab Asesmen, dan catat sikap lewat pengamatan.</p>`,
+  "Asesmen":`
+<h3>Kunci jawaban Misi Akhir (skor maksimum 100)</h3>
+<div class="tw"><table class="t"><thead><tr><th>No</th><th>Level</th><th>Bobot</th><th>Kunci</th></tr></thead><tbody>
+<tr><td>1</td><td>C2</td><td>8</td><td>Jaringan raksasa yang menghubungkan komputer di seluruh dunia</td></tr>
+<tr><td>2</td><td>C2</td><td>8</td><td>Mengatur lalu lintas data dan menyambungkan jaringan ke internet</td></tr>
+<tr><td>3</td><td>C1</td><td>8</td><td>URL</td></tr>
+<tr><td>4</td><td>C2</td><td>8</td><td>Salah (yang digital adalah file foto)</td></tr>
+<tr><td>5</td><td>C3</td><td>8</td><td>Audio</td></tr>
+<tr><td>6</td><td>C2</td><td>8</td><td>Salah (OTP tidak boleh diberikan)</td></tr>
+<tr><td>7</td><td>C1</td><td>8</td><td>Isian: phishing</td></tr>
+<tr><td>8</td><td>C4 (HOTS)</td><td>12</td><td>Membuat panik dengan batas waktu dan meminta kata sandi lewat tautan</td></tr>
+<tr><td>9</td><td>C5 (HOTS)</td><td>12</td><td>Tidak mengunggah, menghapus, dan minta izin bila ingin membagikan</td></tr>
+<tr><td>10</td><td>C6 (HOTS)</td><td>20</td><td>Esai dengan rubrik di bawah</td></tr>
+</tbody></table></div>
+<p>Pembahasan singkat muncul langsung setelah siswa menjawab. Skor dihitung otomatis. Kriteria ketuntasan: <b>≥ 75</b>.</p>
+<h3>Rubrik soal uraian (No. 10, C6)</h3>
+<div class="tw"><table class="t"><thead><tr><th>Kriteria</th><th>5</th><th>3</th><th>0</th></tr></thead><tbody>
+<tr><td>Memeriksa kebenaran atau sumber</td><td>Aturan jelas dan beralasan</td><td>Disebut tanpa alasan</td><td>Tidak ada</td></tr>
+<tr><td>Meminta izin</td><td>Aturan jelas dan beralasan</td><td>Disebut tanpa alasan</td><td>Tidak ada</td></tr>
+<tr><td>Sopan, jujur, menghargai</td><td>Aturan jelas dan beralasan</td><td>Disebut tanpa alasan</td><td>Tidak ada</td></tr>
+<tr><td>Menjaga data pribadi</td><td>Aturan jelas dan beralasan</td><td>Disebut tanpa alasan</td><td>Tidak ada</td></tr>
+</tbody></table></div>
+<p class="muted">Media memberi skor otomatis 0 atau 5 per kriteria berdasarkan kata kunci. Guru dapat menyesuaikan dengan skor 3 setelah membaca jawabannya.</p>
+<h3>Rubrik produk poster (Stasiun C)</h3>
+<div class="tw"><table class="t"><thead><tr><th>Aspek</th><th>4 Sangat baik</th><th>3 Baik</th><th>2 Cukup</th><th>1 Perlu bimbingan</th></tr></thead><tbody>
+<tr><td>Pesan</td><td>Jelas, singkat, bermanfaat</td><td>Jelas</td><td>Kurang jelas</td><td>Tidak ada pesan</td></tr>
+<tr><td>Tampilan</td><td>Kontras baik, gambar sesuai</td><td>Cukup terbaca</td><td>Sulit dibaca</td><td>Tidak terbaca</td></tr>
+<tr><td>Kreativitas</td><td>Ide orisinal</td><td>Ide dari contoh dengan perubahan</td><td>Hampir sama dengan contoh</td><td>Tidak dikembangkan</td></tr>
+<tr><td>Keamanan</td><td>Tanpa data pribadi, ada nama pembuat</td><td>Tanpa data pribadi</td><td>Ada data kecil</td><td>Banyak data pribadi</td></tr>
+</tbody></table></div>
+<h3>Tindak lanjut</h3>
+<ul><li><b>Remedial (skor &lt; 75):</b> media menunjukkan stasiun yang perlu diulang. Guru memberi pendampingan dengan Jalur Pemandu dan asesmen ulang.</li><li><b>Pengayaan (skor ≥ 75):</b> merancang kampanye mini “Aman di Internet” untuk adik kelas dan mempresentasikannya.</li></ul>
+<h3>Penilaian sikap</h3><p>Amati: jujur menjawab, santun berkomentar, bekerja sama, dan menjaga data pribadi (skala 1–4 pada lembar pengamatan guru).</p>`,
+  "Diferensiasi":`
+<h3>Tiga jalur belajar (dipilih siswa di beranda)</h3>
+<div class="tw"><table class="t"><thead><tr><th>Jalur</th><th>Untuk siapa</th><th>Fitur</th></tr></thead><tbody>
+<tr><td>🧭 Pemandu (scaffolding)</td><td>Siswa yang butuh bimbingan lebih</td><td>Petunjuk Piko selalu tampil; contoh ide poster; tombol 🔊 untuk membaca teks; guru mendampingi dalam kelompok kecil</td></tr>
+<tr><td>🏕️ Petualang (reguler)</td><td>Sebagian besar siswa</td><td>Petunjuk tersedia saat diminta; contoh ide poster</td></tr>
+<tr><td>🚀 Penjelajah (enrichment)</td><td>Siswa yang cepat paham</td><td>Misi Bonus di setiap stasiun (DNS, ukuran file, kontras, tekanan psikologis phishing, jejak digital); membuat poster dari ide sendiri</td></tr>
+</tbody></table></div>
+<h3>Aksesibilitas dan inklusivitas</h3>
+<ul><li>Huruf dapat diperbesar; kontras tinggi; mode gelap otomatis.</li><li>Seluruh interaksi dapat dilakukan dengan sentuhan, klik, atau papan ketik (tidak wajib menyeret).</li><li>Informasi tidak hanya disampaikan lewat warna: ada ikon ✓ dan ✗ serta teks umpan balik.</li><li>Teks dapat dibacakan; bahasa sederhana dengan kalimat pendek.</li><li>Konten bebas SARA dan sesuai etika pendidikan Indonesia. Doa pembuka bersifat inklusif (menurut agama dan kepercayaan masing-masing).</li></ul>
+<h3>Gamifikasi</h3><p>Poin XP, 5 level (Paket Mungil sampai Warga Digital Bijak), 8 lencana, misi per stasiun, papan skor perangkat, dan sertifikat. Reward visual berupa konfeti dan kartu lencana.</p>`,
+  "Teknis & Storyboard":`
+<h3>Struktur navigasi</h3>
+<p>Beranda → Latihan Tiga Gerakan → Peta Petualangan → Stasiun A–E (6 langkah sampai 7 langkah) → Misi Akhir → Hasil → Refleksi → Sertifikat. Bilah atas selalu menampilkan XP, level, lencana, Kamus Piko, A+, dan Panel Guru.</p>
+<h3>Storyboard ringkas</h3>
+<div class="tw"><table class="t"><thead><tr><th>Layar</th><th>Visual</th><th>Interaksi</th><th>Navigasi</th></tr></thead><tbody>
+<tr><td>Beranda</td><td>Judul besar, kabel dengan Piko berlari antara laptop dan server</td><td>Kirim Piko; isi nama; pilih jalur</td><td>Mulai Petualangan</td></tr>
+<tr><td>Latihan</td><td>3 kartu latihan, 6 kartu misi belajar</td><td>Tekan, pindahkan, pilih</td><td>Aktif jika 3 latihan selesai</td></tr>
+<tr><td>Peta</td><td>Jalur kabel bertitik dengan 5 stasiun dan Misi Akhir; panel level, misi, lencana</td><td>Pilih stasiun</td><td>Ke stasiun atau Misi Akhir</td></tr>
+<tr><td>Cerita (tiap stasiun)</td><td>Adegan emoji besar, teks cerita, gelembung Piko</td><td>Memilih tebakan dengan umpan balik</td><td>Lanjut setelah benar</td></tr>
+<tr><td>Jelajah</td><td>Kartu ikon (jalur data / layar tablet)</td><td>Hotspot: tekan kartu, baca detail</td><td>Lanjut jika semua dibuka</td></tr>
+<tr><td>Aktivitas</td><td>Slot urutan, dua kolom pasangan, kotak pemilahan, pembuat poster, pesan detektif</td><td>Urutkan, pasangkan, seret atau tekan, rancang, temukan</td><td>Lanjut jika selesai</td></tr>
+<tr><td>Kuis dan skenario</td><td>Konteks, pilihan A/B/C, kotak umpan balik</td><td>Pilih jawaban, ulang jika salah</td><td>Lanjut jika semua benar</td></tr>
+<tr><td>Rangkuman</td><td>Peta pikiran, kata kunci, kartu salah kaprah</td><td>Tekan kartu untuk meluruskan</td><td>Selesai dan lencana</td></tr>
+<tr><td>Misi Akhir dan Hasil</td><td>Bilah progres, cincin skor, papan skor</td><td>Pilihan ganda, isian, uraian</td><td>Remedial atau pengayaan, refleksi</td></tr>
+</tbody></table></div>
+<h3>Spesifikasi visual</h3>
+<ul><li><b>Palet:</b> indigo tua #1B2160 (teks dan garis), kuning #FFC22E (aksi), biru, ungu, kuning, merah muda, hijau sebagai warna stasiun.</li><li><b>Huruf:</b> Baloo 2 (judul), Nunito (isi), dengan font cadangan sistem.</li><li><b>Gaya:</b> kartu bergaris tebal bergaya stiker dengan bayangan keras; titik-titik jaringan di latar.</li><li><b>Maskot:</b> Piko, paket data berantena (SVG).</li><li><b>Aset:</b> semua ikon berupa emoji dan SVG, tanpa berkas gambar, sehingga ringan dan mudah dibawa.</li></ul>
+<h3>Menyesuaikan ke platform lain</h3><p>Tiap stasiun dapat dipindahkan ke H5P (Drag and Drop, Sort the Paragraphs, Multiple Choice, Image Hotspots), Canva (presentasi interaktif), atau Genially.</p>`
+  };
+}
+function openTeacher(){
+  const T=teacherHTML(),names=Object.keys(T); const body=$("#teacherBody");
+  const panel=h("div"); const tabs=h("div",{class:"tabs",role:"tablist"});
+  function show(n){ tabs.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.n===n))); panel.innerHTML=T[n];
+    const u=panel.querySelector("#tUnlock"); if(u)u.onclick=()=>{S.unlock=true;save();toast("Misi Akhir dibuka 🔓");};
+    const bd=panel.querySelector("#tBoard"); if(bd)bd.onclick=()=>{LS.del(BOARD);toast("Papan skor dihapus");};
+    const rs=panel.querySelector("#tReset"); if(rs)rs.onclick=()=>{ if(confirm("Reset seluruh progres di perangkat ini?")){resetAll();$("#dlgTeacher").close();setView("welcome");} }; }
+  names.forEach(n=>tabs.append(h("button",{class:"tab",type:"button",role:"tab","data-n":n,onclick:()=>show(n)},n)));
+  body.replaceChildren(tabs,panel); show(names[0]); $("#dlgTeacher").showModal();
+}
+
+/* ============ init ============ */
+document.querySelectorAll("dialog").forEach(d=>{d.addEventListener("click",e=>{if(e.target===d||e.target.closest("[data-close]"))d.close();});});
+$("#homeBtn").onclick=()=>setView("welcome");
+$("#btnDict").onclick=()=>{drawDict("");$("#dictQ").value="";$("#dlgDict").showModal();};
+$("#dictQ").addEventListener("input",e=>drawDict(e.target.value));
+$("#btnBig").onclick=e=>{const on=document.documentElement.classList.toggle("big");e.currentTarget.setAttribute("aria-pressed",String(on));};
+$("#btnTeacher").onclick=openTeacher;
+refreshBar();
+setView("welcome");
+})();
+</script>
+</body>
+</html>
